@@ -1,0 +1,35 @@
+{{ define "main" }}
+{{ .Content}}
+{{ if .Site.Params.profileImage }}
+{{ with .Site.Params.profileImage }}
+<img src="{{ . }}" alt="Profile picture" style="
+    width: 30%;height: 30%
+">
+</img>
+{{ end }}
+{{ end}}
+
+{{ if or .Site.Params.homeIntroTitle .Site.Params.homeIntroContent }}
+<div class="intro">
+    {{ with .Site.Params.homeIntroTitle }}
+    <strong>{{ . }}</strong>
+    {{ end }}
+
+    {{ with .Site.Params.homeIntroContent }}
+    <p>{{ . | markdownify }}</p>
+    {{ end }}
+</div>
+{{ end }}
+
+
+{{ with .Site.Params.social }}
+<div class="social-icons">
+    {{- range . }}
+    <a href="{{ trim .url " " | safeURL }}" target="_blank" rel="noopener noreferrer me"
+        title="{{ (.title | default .name) | title }}">
+        {{ partial "svg.html" . }}
+    </a>
+    {{- end }}
+</div>
+{{ end }}
+{{ end }}

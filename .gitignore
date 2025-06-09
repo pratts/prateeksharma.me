@@ -30,3 +30,24 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Hugo output folder
+/public/
+/resources/
+hugo_stats.json
+
+# Node.js dependencies (if using postcss or tailwind, etc.)
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+
+# Backup files
+*.swp
+*.swo
+*~

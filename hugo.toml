@@ -1,0 +1,107 @@
+baseURL = '/'
+languageCode = 'en-us'
+title = 'Prateek Sharma'
+theme = 'typo'
+
+[taxonomies]
+tag = 'tags'
+project = 'projects'
+
+[params]
+description = 'My personal blog and portfolio'
+theme = 'auto'
+colorPalette = 'default'
+hideHeader = false
+
+profileImage = './profile.jpg'
+homeIntroTitle = 'Hi!'
+homeIntroContent = """
+Software Developer with 10+ years of experience developing scalable backend systems and working with
+cross-functional teams. Experienced in Node.js, TypeScript, Java and PostgreSQL with proven track record in carbon
+accounting software, real-money real-time gaming platforms, and multi-tenant SaaS architecture. Experienced in
+database design and optimization and API development.
+\nCurrently learning Golang, Python by building some hobby projects.
+\nFeel free to reach out to me via email at [prateeksharma.2801@gmail.com](mailto:prateeksharma.2801@gmail.com) or connect with me on [LinkedIn](https://www.linkedin.com/in/prateeksharma28/).
+If you have any questions, suggestions, or just want to say hello, don't hesitate to get in touch!
+"""
+
+# Collection to display on home
+homeCollectionTitle = 'Posts'
+homeCollection = 'posts'
+
+# Lists parameters
+paginationSize = 10
+listSummaries = true
+listDateFormat = '2 Jan 2006'
+
+# Footer
+showFooter = true
+
+# Breadcrumbs
+[params.breadcrumbs]
+enabled = true
+showCurrentPage = true
+home = "Home"
+
+# Social icons
+[[params.social]]
+name = "gmail"
+url = "mailto:prateeksharma.2801@gmail.com"
+
+[[params.social]]
+name = "linkedin"
+url = "https://www.linkedin.com/in/prateeksharma28/"
+target = "_blank"
+
+[[params.social]]
+name = "github"
+url = "https://github.com/pratts"
+target = "_blank"
+
+[[params.social]]
+name = "stackexchange"
+url = "https://stackexchange.com/users/3052399/prateek"
+target = "_blank"
+
+[[params.social]]
+name = "discord"
+url = "https://discord.com/users/pratts28"
+target = "_blank"
+
+[[params.social]]
+name = "googledrive"
+url = "https://drive.google.com/file/d/11VADCUZrHJzU2U8J5Y5lJmXiOUVLUhDG/view?usp=sharing"
+target = "_blank"
+
+
+# Main menu pages
+[[params.menu]]
+name = "home"
+url = "/"
+
+[[params.menu]]
+name = "experiences"
+url = "/experiences"
+
+[[params.menu]]
+name = "projects"
+url = "/projects"
+
+[[params.menu]]
+name = "posts"
+url = "/posts"
+
+[[params.menu]]
+name = "about"
+url = "/about"
+
+[[params.menu]]
+name = "resume"
+url = "https://drive.google.com/file/d/11VADCUZrHJzU2U8J5Y5lJmXiOUVLUhDG/view?usp=sharing"
+target = "_blank"
+
+
+# Syntax highlight on code blocks
+[markup]
+[markup.highlight]
+style = 'algol'
