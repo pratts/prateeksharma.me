@@ -2,6 +2,7 @@
 date = '2025-06-09T18:53:16+05:30'
 draft = false
 title = 'Experiences'
+autonumber = false
 +++
 
 ### Here is the brief summary of my resume
