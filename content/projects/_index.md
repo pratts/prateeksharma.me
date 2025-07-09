@@ -9,3 +9,6 @@ toc = true
 
 * [***Audio Cloning***](/projects/audio-cloning)
     : An extension of the video-translator tool that generates cloned audio for short subtitles, improving the quality of audio output.
+
+* [***TTS Study Assistant***](/projects/tts-study-assistant)
+    : A productivity tool that lets users save, organize, and listen to notes from any website using a Chrome extension.
