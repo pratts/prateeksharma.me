@@ -1,6 +1,6 @@
 +++
 date = '2025-07-09T17:31:45+05:30'
-draft = true
+draft = false
 title = 'Study Assistant: Chrome Extension'
 categories = ["engineering", "chrome-extension", "golang", "tts"]
 description = "A deep dive into the technical design and implementation of a TTS Study Assistant Chrome extension and its Go backend."
