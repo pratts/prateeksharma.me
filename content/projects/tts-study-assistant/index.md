@@ -385,8 +385,8 @@ Building the TTS Study Assistant was an to learn full-stack development, coverin
 The project is open-source and available on GitHub, serving as both a functional study tool and a reference implementation for similar applications.
 
 ## Links:
-- [GitHub Repository](git@github.com:pratts/tts-study-assistant.git)
-- [Chrome Web Store Listing](www.tidylnk.com/1RucaU)
+- [GitHub Repository](https://github.com/pratts/tts-study-assistant.git)
+- [Chrome Web Store Listing](https://www.tidylnk.com/1RucaU)
 - [Admin Panel](https://tts-study-assistant.vercel.app/)
 
 ## Feedback
