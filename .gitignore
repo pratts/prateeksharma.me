@@ -32,7 +32,9 @@ go.work.sum
 # .vscode/
 
 # Hugo output folder
-/public/
+/public/*
+!/public/.git
+
 /resources/
 hugo_stats.json
 

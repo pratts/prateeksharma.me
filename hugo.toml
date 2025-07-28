@@ -33,6 +33,7 @@ homeCollection = 'posts'
 paginationSize = 10
 listSummaries = true
 listDateFormat = '2 Jan 2006'
+autonumber = false
 
 # Footer
 showFooter = true
@@ -41,7 +42,8 @@ showFooter = true
 [params.breadcrumbs]
 enabled = true
 showCurrentPage = true
-home = "Home"
+home = "~"
+
 
 # Social icons
 [[params.social]]
@@ -70,7 +72,7 @@ target = "_blank"
 
 [[params.social]]
 name = "googledrive"
-url = "https://drive.google.com/file/d/11VADCUZrHJzU2U8J5Y5lJmXiOUVLUhDG/view?usp=sharing"
+url = "https://drive.google.com/file/d/11AkeIvL9fd6pY1mCdHzdOi2iq8QL1GbL/view?usp=sharing"
 target = "_blank"
 
 

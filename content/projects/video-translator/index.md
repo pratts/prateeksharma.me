@@ -1,0 +1,48 @@
++++
+date = '2025-06-23T11:14:19+05:30'
+draft = false
+title = 'Video Translator'
+
+readTime = true
+autonumber = false
+tags = ["Python", "OpenAI-Whisper", "FFMPEG", "ChatGPT", "Google Translate"]
+showTags = true
+hideBackToTop = true
+
+parent = "projects"
+ancestor = "projects"
++++
+
+I always wished to see the Japanese anime in english. But the audio was not available in English. I had to rely on subtitles. It was the same experience while watching other foreign language movies. Constantly watching the movie and subtitles was too much hassle.
+
+During my break recently, I thought of exploring the possibility of translating the videos to English. With the advancement in AI and open source libraries, I decided to build a basic tool/script to achieve the same. I wanted the script to do the following:
+1. Extract the background audio from the video.
+2. Transcribe the audio to original language in subtitle file format.
+3. Translate each subtitle to English.
+4. Convert the translated subtitles to audio.
+5. Merge the translated audio with the background audio to generate final audio file.
+6. Merge the final audio with the original video to generate the translated video.
+
+I wanted to use open source libraries and minimize third party paid tools. Here is the list of libraries and tools I used:
+- [OpenAI-Whisper](https://github.com/openai/whisper) - For transcribing the audio to original language in subtitle file format.
+- [FFMPEG](https://ffmpeg.org/) - For merging the audio and video files. This is a base of multiple libraries to perform audio and video operations.
+- [ChatGPT](https://chat.openai.com/) - For translating the subtitles to English. This is a paid service, but I used it for a limited number of subtitles.
+- [Google Translate](https://translate.google.com/) - For translating the subtitles to English. I had to create Google service account with translation API enabled. This is a paid service, but I used it for a limited number of subtitles.
+- [srt](https://pypi.org/project/srt/) - For reading and writing subtitle files in SRT format.
+- [demucs](https://github.com/facebookresearch/demucs) - For separating the background audio from the video. This is a deep learning model that separates the audio into vocals and background music.
+
+There were some challenges I faced while building the tool:
+1. Transcribing audio correctly: In some cases, the audio was not transcribed correctly. Specially when it included loud background music. This was the case with whisper. I tried using demucs to separate the background music from the vocals, but it did not work well in the basic case of mine. I found that whisper can do a better job since it was trained on audio files with background music. The default mode was transcribing when run via command line. I experienced that the turbo model works better than the default large model.
+2. Translating subtitles: I explored google translate API, chatgpt API and deepl. I found that while google translate API is the most accurate, I wanted to add some human touch to the translation. ChatGPT was able to do that for me. In the script, there is an option to choose between Google Translate and ChatGPT.
+3. Text to speech: I didn't want to spend money on paid tools and wanted to try open source libraries. I tried using bark. The audio was generated but in some cases, the quality was very poor and it added distorted sounds in few cases. I decided to try voice cloning libraries and came across OpenVoice and Melo TTS.
+4. Voice Cloning: While OpenVoice and MeloTTS could generate the audio together, but there were 2 major hurdles I faced:
+    - The libraries were not functional on Python 3.12 which I was using. It worked on python 3.10. So including the TTS logic in the same script was not possible.
+    - The libraries needed a longer sample audio to clone the voice better. Some of the subtitles were short and there were errors generating the audio for those subtitles. I decided to clone the repository for OpenVoice and updated the checks that required longer audio samples. I also added a check to skip the subtitles that were too short.
+5. Translate audio length: In some cases, the translated audio was longer than the original audio. This caused issues while merging the audio with the video. In some cases, trimming the audio was required.
+6. Apple Mac M1: The libraries were developed with GPU(CUDA) in mind. So the logics were run on CPU. This caused the audio generation to take a lot of time. I had to tweak the OpenVoice library to run on CPU.
+
+I have created 2 github repositories for the tool:
+- [Video Translator](https://github.com/pratts/video-translator) - This contains the README with all the details to run the tool.
+- [Audio Cloning](https://github.com/pratts/OpenVoice) - This contains the tweaked version of OpenVoice library to generate cloned audio for short subtitles. It has a file named `test1.py` that can be used to clone the audio output generated by the video translator tool.
+
+After both scripts are run, the Readme file in translator repository has the details to generate the final translated video.
