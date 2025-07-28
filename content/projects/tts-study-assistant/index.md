@@ -1,139 +1,393 @@
-+++
-date = '2025-07-09T17:31:45+05:30'
-draft = false
-title = 'Study Assistant: Chrome Extension'
-categories = ["engineering", "chrome-extension", "golang", "tts"]
-description = "A deep dive into the technical design and implementation of a TTS Study Assistant Chrome extension and its Go backend."
-+++
+---
+title: "TTS Study Assistant: A Chrome Extension"
+date: 2024-01-15
+draft: false
+tags: ["chrome-extension", "go", "react", "typescript", "ai", "tts", "study-tools"]
+categories: ["Development", "Projects"]
+---
 
 ## Introduction
 
-In this post, I’ll walk through the technical details of building a Study Assistant—a productivity tool that lets users save, organize, and listen to notes from any website. The solution consists of a Chrome extension (frontend) and a Go/Fiber backend, with secure authentication, domain-based note management, and text-to-speech (TTS) features.
+I recently built a comprehensive TTS (Text-to-Speech) Study Assistantthat enables a user to save notes, play audio for the saved notes and summarize them using AI. It combines a Chrome extension with a Go backend and React based admin panel.
 
----
+## Project Overview
 
-## 1. Chrome Extension: Technical Details
+The TTS Study Assistant is a study tool that helps users:
+- **Capture and organize notes** from any webpage
+- **Listen to text selections** using Chrome's TTS API
+- **Summarize notes** using AI for quick review
+- **Manage notes** using a React-based admin panel
 
-### Architecture
+## Architecture
 
-- **Popup UI:** Built with vanilla JS, HTML, and CSS for fast load and compatibility.
-- **Content Scripts:** Injected into web pages to capture selected text and interact with the context menu.
-- **Background Script:** Handles authentication, API calls, and communication between popup, content scripts, and backend.
-- **Context Menus:** Adds a right-click menu for saving selected text as a note.
-- **TTS Integration:** Uses the Web Speech API (`window.speechSynthesis`) for in-browser audio playback.
+### Tech Stack
 
-### Key Features
+**Backend (Golang)**
+- **Framework**: Fiber (high-performance HTTP framework)
+- **Database**: PostgreSQL with GORM ORM
+- **Authentication**: JWT with source-based token expiry
+- **AI Integration**: OpenAI GPT-3.5-turbo for text summarization
+- **Deployment**: Docker containerization on Railway
 
-- **Save Notes:** Select text on any page, right-click, and save it as a note (with source URL and domain auto-detected).
-- **Listen to Notes:** Play, pause, and replay notes using TTS directly from the popup.
-- **Domain Awareness:** Notes are grouped and filtered by domain, including special handling for local files and PDFs.
-- **Authentication:** Secure login with JWT/refresh tokens, passwords are pre-hashed (SHA-256) before sending to the backend.
-- **Sync:** Notes are synced with the backend, so users can access them from the web dashboard as well.
+**Frontend (React + TypeScript)**
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite for fast development and building
+- **State Management**: React Context + React Query
+- **Deployment**: Vercel for static hosting
 
-### Permissions & Security
+**Chrome Extension**
+- **Manifest**: Manifest V3 for modern extension APIs
+- **Storage**: Chrome Storage API for local state
+- **TTS**: Chrome TTS API for text-to-speech
+- **Content Scripts**: For webpage interaction
 
-- **Permissions:** `activeTab`, `contextMenus`, `storage`, `tts`, and host permissions for all URLs.
-- **Privacy:** No user data is sold or shared; only email, hashed password, and selected note content are sent to the backend.
-- **Edge Cases:** Handles Chrome PDF viewer and local files by mapping their domains to a generic label ("Downloaded/Local file").
+## Key Features
 
-### Example: Context Menu Handler
+### 1. Text-to-Speech Functionality
 
-```js
-chrome.contextMenus.create({
-  id: "save-note",
-  title: "Save Note",
-  contexts: ["selection"],
+The core TTS feature allows users to:
+- **Select any text** on a webpage and have it read aloud
+- **Control playback** with play, pause, resume, and stop controls
+- **Queue management** for multiple text selections
+
+**Technical Implementation:**
+```javascript
+// Content script handles text selection and TTS requests
+chrome.runtime.sendMessage({
+  action: 'speak',
+  text: selectedText,
+  tabId: tab.id
 });
 
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId === "save-note" && info.selectionText) {
-    // Send selected text to backend
-    await apiClient.saveNote({
-      content: info.selectionText,
-      source_url: tab.url,
-      domain: extractDomain(tab.url),
-    });
+// Background script manages Chrome TTS API
+chrome.tts.speak(text, {
+  rate: 1.0,
+  pitch: 1.0,
+  onEvent: function(event) {
+    // Handle TTS events
   }
 });
 ```
 
----
+### 2. Note Management System
 
-## 2. Backend Design (Go + Fiber + GORM)
+Users can save and organize study notes with:
+- **Automatic domain detection** from source URLs
+- **Rich metadata** storage for additional context
+- **Pagination and filtering** for large note collections
 
-### Overview
-
-- **Framework:** Go with Fiber (Express-like web framework)
-- **Database:** PostgreSQL, accessed via GORM ORM
-- **API:** RESTful endpoints for authentication, notes CRUD, user profile, and stats
-- **OpenAPI Spec:** Full API documentation via `openapi.json`
-
-### Authentication & Security
-
-- **JWT Auth:** Access tokens for API calls, refresh tokens for session management
-- **Password Handling:** All passwords are pre-hashed (SHA-256) by the client; backend never sees plaintext passwords
-- **Token Rotation:** Refresh tokens are rotated and stored securely in the database
-
-### Notes Model
-
-```go
-type Note struct {
-    ID         uuid.UUID      `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
-    UserID     uuid.UUID      `gorm:"not null"`
-    Content    string         `gorm:"type:text;not null"`
-    SourceURL  string         `gorm:"type:text"`
-    SourceTitle string        `gorm:"type:text"`
-    Domain     string         `gorm:"type:text"`
-    Metadata   datatypes.JSON `gorm:"type:jsonb"`
-    CreatedAt  time.Time
-    UpdatedAt  time.Time
-}
+**Database Schema:**
+```sql
+CREATE TABLE notes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL,
+  content TEXT NOT NULL,
+  source_url TEXT,
+  source_title TEXT,
+  domain TEXT,
+  summary TEXT,
+  metadata JSONB,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
 ```
 
-### API Highlights
+### 3. AI-Powered Summarization
 
-- **/auth/register, /auth/login, /auth/refresh, /auth/logout:** Secure user authentication
-- **/notes:** CRUD for notes, with pagination, sorting, and filtering by domain/source
-- **/notes/stats:** Returns note counts per domain for dashboard analytics
-- **/user/profile, /user/password:** User info and password update endpoints
+The system integrates OpenAI's GPT-3.5-turbo for intelligent text summarization:
 
-### Example: Notes Pagination Handler
-
+**Go Implementation:**
 ```go
-func GetNotes(c *fiber.Ctx) error {
-    userID := c.Locals("user_id").(uuid.UUID)
-    page, _ := strconv.Atoi(c.Query("page", "1"))
-    pageSize, _ := strconv.Atoi(c.Query("page_size", "10"))
-    var notes []models.Note
-    db := database.DB.Where("user_id = ?", userID)
-    if domain := c.Query("domain"); domain != "" {
-        db = db.Where("domain = ?", domain)
+func (s *SummarizerService) Summarize(text string) (string, error) {
+    payload := map[string]interface{}{
+        "model": "gpt-3.5-turbo",
+        "messages": []map[string]string{
+            {
+                "role":    "system",
+                "content": "You are a helpful assistant that creates concise summaries. Summarize the following text in 2-3 sentences, capturing the key points.",
+            },
+            {
+                "role":    "user",
+                "content": text,
+            },
+        },
+        "temperature": 0.7,
+        "max_tokens":  150,
     }
-    db = db.Order("created_at DESC").Offset((page-1)*pageSize).Limit(pageSize)
-    db.Find(&notes)
-    return c.JSON(notes)
+    
+    // Make API call to OpenAI
+    // Parse response and return summary
 }
 ```
 
-### Security & Best Practices
 
-- **CORS:** Configured for frontend and extension origins
-- **Error Handling:** Consistent error responses with codes/messages
-- **OpenAPI:** All endpoints documented for easy integration
+### 4. Authentication & Security
 
----
+**Multi-Source Authentication:**
+- **Web sessions**: 15-minute access tokens, 30-day refresh tokens
+- **Extension sessions**: 1-hour access tokens, 90-day refresh tokens
+- **Token rotation** on refresh for enhanced security
+- **Source tracking** for audit and security purposes
+
+**JWT Implementation:**
+```go
+func (s *AuthService) generateAccessTokenWithSource(userID, email, source string) (string, error) {
+    var exp time.Duration
+    switch source {
+    case "extension":
+        exp = time.Hour * 1
+    default:
+        exp = time.Minute * 15
+    }
+    
+    claims := jwt.MapClaims{
+        "user_id": userID,
+        "email":   email,
+        "exp":     time.Now().Add(exp).Unix(),
+        "iat":     time.Now().Unix(),
+    }
+    
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    return token.SignedString([]byte(s.cfg.JWTSecret))
+}
+```
+
+### 5. Chrome Extension Architecture
+
+**Manifest V3 Structure:**
+```json
+{
+  "manifest_version": 3,
+  "name": "TTS Study Assistant",
+  "version": "1.0.0",
+  "permissions": [
+    "storage",
+    "tts",
+    "activeTab",
+    "contextMenus"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content.js"],
+    "css": ["content.css"]
+  }]
+}
+```
+
+**Key Components:**
+- **Background Service Worker**: Manages TTS state and API communication
+- **Content Scripts**: Handle text selection and user interaction
+- **Popup Interface**: Provides controls and note management
+- **Storage API**: Persists user preferences and authentication state
+
+## Development Challenges & Solutions
+
+### 1. Chrome Extension TTS Limitations
+
+**Challenge**: Chrome's TTS API doesn't provide detailed playback state information.
+
+**Solution**: Implemented a custom state management system:
+```javascript
+// Track TTS state manually
+let currentState = {
+  isPlaying: false,
+  isPaused: false,
+  currentText: null,
+  queue: []
+};
+
+// Update UI based on state
+function updateButtonStates() {
+  playBtn.disabled = !currentState.queue.length && !currentState.currentText;
+  pauseBtn.style.display = currentState.isPlaying ? 'block' : 'none';
+  resumeBtn.style.display = currentState.isPaused ? 'block' : 'none';
+}
+```
+
+### 2. Cross-Origin API Communication
+
+**Challenge**: Chrome extensions need to communicate with external APIs while handling CORS.
+
+**Solution**: Used Chrome's storage API for token management and implemented proper error handling:
+```javascript
+class ApiClient {
+  async _fetchWithAuth(url, options = {}) {
+    const token = await this.getAccessToken();
+    
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        ...options.headers
+      }
+    });
+    
+    if (response.status === 401) {
+      // Handle token refresh
+      await this.refreshToken();
+      return this._fetchWithAuth(url, options);
+    }
+    
+    return response;
+  }
+}
+```
+
+### 3. Real-time UI Synchronization
+
+**Challenge**: Keeping popup UI in sync with background TTS state.
+
+**Solution**: Implemented message passing between background and popup:
+```javascript
+// Background sends state updates
+chrome.runtime.sendMessage({
+  action: 'stateUpdate',
+  state: ttsState
+});
+
+// Popup listens for updates
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === 'stateUpdate') {
+    // UI Update logic
+  }
+});
+```
+
+## Performance Optimizations
+
+### 1. Database Indexing
+```sql
+-- Optimize note queries by user and domain
+CREATE INDEX idx_uid_did ON notes(user_id, domain);
+
+-- Index for refresh token lookups
+CREATE INDEX idx_refresh_token ON refresh_tokens(token);
+```
+
+### 2. Frontend Code Splitting
+```typescript
+// Lazy load components for better performance
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Notes = lazy(() => import('./pages/Notes'));
+const Profile = lazy(() => import('./pages/Profile'));
+```
+
+## Deployment Strategy
+
+### Backend Deployment
+```dockerfile
+# Multi-stage Docker build
+FROM golang:1.21-alpine AS builder
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/server
+
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /app/main .
+EXPOSE 3000
+CMD ["./main"]
+```
+
+### Frontend Deployment
+```json
+// vercel.json for SPA routing
+{
+    "routes": [
+        {
+            "src": "/[^.]+",
+            "dest": "/",
+            "status": 200
+        }
+    ]
+}
+```
+
+## Security Considerations
+
+### 1. Password Security
+- **Client-side hashing**: Passwords are hashed using SHA-256 before transmission
+- **No plain text storage**: Backend never sees plain text passwords
+- **Secure comparison**: Direct hash comparison for authentication
+Example to generate SHA-256 hash in TypeScript:
+```go
+export async function sha256(str: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+    const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+} 
+```
+
+### 2. API Security
+- **JWT tokens**: Secure, time-limited access tokens
+- **CORS configuration**: Properly configured for cross-origin requests
+- **Input validation**: Comprehensive request validation
+- **SQL injection prevention**: GORM ORM with parameterized queries
+
+### 3. Extension Security
+- **Minimal permissions**: Only requested necessary Chrome APIs
+- **Content script isolation**: Proper sandboxing of web page interaction
+- **Secure storage**: Chrome Storage API for sensitive data
+
+## Future Enhancements
+
+### Planned Features
+1. **Offline support** with service workers
+2. **Voice customization** for TTS (speed, pitch, voice selection)
+3. **Study analytics** and progress tracking
+4. **Collaborative notes** with sharing capabilities
+
+### Technical Improvements
+1. **WebSocket support** for real-time updates
+2. **Advanced caching** with Redis
+
+## Lessons Learned
+
+### 1. Chrome Extension Development
+- **Manifest V3** introduces new security models and limitations
+- **Service workers** replace background pages but have different lifecycle
+- **Content script isolation** requires careful message passing design
+
+### 2. Go Backend Development
+- **Fiber framework** provides excellent performance for HTTP APIs
+- **GORM** simplifies database operations but requires careful query optimization
+- **JWT implementation** needs proper error handling and token rotation
+
+### 3. React Frontend Development
+- **React** provides a component-based architecture for building UIs
+- **TypeScript** catches many errors at compile time
+
+### 4. Full-Stack Integration
+- **API design** should be consistent across all clients
+- **Error handling** needs to be comprehensive at all layers
+- **Authentication flow** must work seamlessly across web and extension
+
+### 5. End to end deployment
+- **Docker** simplifies deployment but requires careful image management
+- **Railway for backend** provides a great platform for Go applications with easy scaling
+- **Railway for database** simplifies PostgreSQL management
+- **Vercel** simplifies React deployments with automatic optimizations
 
 ## Conclusion
 
-This architecture enables a seamless, cross-platform study assistant experience. The Chrome extension and Go backend are decoupled, secure, and scalable. The same backend can power future mobile or desktop apps, and the extension can be ported to other browsers with minimal changes.
+Building the TTS Study Assistant was an to learn full-stack development, covering everything from browser extension APIs, admin panel, Golang based backend development to AI integration. The project demonstrates modern development practices while solving real user problems.
 
----
+The project is open-source and available on GitHub, serving as both a functional study tool and a reference implementation for similar applications.
 
-You can watch the demo of the plugin at: [TTS Study Assistant Chrome Extension](www.loom.com/share/8c291ec1989b44f793af83d4d2678d10?sid=e5dbd943-e8e6-46ea-b0a1-588134f8c3db)
+## Links:
+- [GitHub Repository](git@github.com:pratts/tts-study-assistant.git)
+- [Chrome Web Store Listing](www.tidylnk.com/1RucaU)
+- [Admin Panel](https://tts-study-assistant.vercel.app/)
 
-## Future Enhancements
-- **Mobile App:** Build a React Native app to access notes on the go.
-- **Desktop App:** Create a cross-platform desktop app using Electron or Tauri.
-- **AI Features:** Integrate AI for summarization, tagging, and smart search.
-- **Collaboration:** Allow users to share notes with others or create public note collections.
-- **Analytics Dashboard:** Provide insights on note usage, most active domains, etc.
+## Feedback
+I welcome any feedback or contributions to the project. Feel free to open issues or pull requests on the GitHub repository. Your input can help improve the tool and add new features that benefit all users.
