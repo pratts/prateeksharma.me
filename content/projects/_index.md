@@ -4,6 +4,9 @@ draft = false
 title = 'Projects'
 toc = true
 +++
+* [***Goroomlib***](/projects/goroomlib)
+    : A thread-safe Go library providing a reusable Room-User architecture for real-time systems like chat and multiplayer games.
+
 * [***WazirX Go Connector***](/projects/wazirx-connector-go)
     : An open-source unofficial REST API client for the WazirX crypto exchange in Go, acknowledged by WazirX's co-founder.
 

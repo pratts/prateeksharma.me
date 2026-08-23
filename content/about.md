@@ -18,6 +18,7 @@ Below mentioned are some of the key projects that I was involved in during my ca
 
 Some of the personal projects I am currently working on include:
 - **[prateeksharma.me](https://pratts.github.io)**: A website where I share my learnings as a backend developer.
+- **[Goroomlib](/projects/goroomlib)**: A thread-safe Go library providing a reusable Room-User architecture for building real-time systems like chat and multiplayer games.
 - **[WazirX Go Connector](/projects/wazirx-connector-go)**: Open-sourced unofficial REST API connector for the WazirX crypto exchange, acknowledged by WazirX's co-founder.
 - **[WazirX Java Connector](/projects/wazirx-connector-java)**: Open-sourced unofficial REST/WebSocket connector for the WazirX crypto exchange, acknowledged by WazirX's co-founder.
 - **[Tidylnk.com](https://admin.tidylnk.com/)**: A URL shortener service that I built using Golang, React, Redis and PostgreSQL. The services are deployed using Docker and Railway.
