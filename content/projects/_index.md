@@ -4,6 +4,15 @@ draft = false
 title = 'Projects'
 toc = true
 +++
+* [***WazirX Go Connector***](/projects/wazirx-connector-go)
+    : An open-source unofficial REST API client for the WazirX crypto exchange in Go, acknowledged by WazirX's co-founder.
+
+* [***WazirX Java Connector***](/projects/wazirx-connector-java)
+    : An open-source unofficial REST/WebSocket client for the WazirX crypto exchange in Java, acknowledged by WazirX's co-founder.
+
+* [***Tidylnk.com***](/projects/tidylnk)
+    : A self-hosted URL shortener with a React admin panel, built with Golang, Redis, and PostgreSQL.
+
 * [***Video Translator***](/projects/video-translator)
     : A tool to transcribe and translate video subtitles into multiple languages using AI models and open source libraries.
 

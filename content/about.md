@@ -18,9 +18,10 @@ Below mentioned are some of the key projects that I was involved in during my ca
 
 Some of the personal projects I am currently working on include:
 - **[prateeksharma.me](https://pratts.github.io)**: A website where I share my learnings as a backend developer.
-- **[WazirX API Connectors](https://github.com/pratts/wazirx-connector-go)**: Open-sourced unofficial REST API connector wrappers for the WazirX crypto exchange in [Go](https://github.com/pratts/wazirx-connector-go) and [Java](https://github.com/pratts/wazirx-connector-java), acknowledged by WazirX's co-founder, plus a submitted patch to the official Python SDK.
+- **[WazirX Go Connector](/projects/wazirx-connector-go)**: Open-sourced unofficial REST API connector for the WazirX crypto exchange, acknowledged by WazirX's co-founder.
+- **[WazirX Java Connector](/projects/wazirx-connector-java)**: Open-sourced unofficial REST/WebSocket connector for the WazirX crypto exchange, acknowledged by WazirX's co-founder.
 - **[Tidylnk.com](https://admin.tidylnk.com/)**: A URL shortener service that I built using Golang, React, Redis and PostgreSQL. The services are deployed using Docker and Railway.
-- **Proxy + Adblocker**: A proxy server that I built using Golang, which blocks ads domains as well.
+- **[TTS Study Assistant](/projects/tts-study-assistant)**: A productivity tool that lets users save, organize, and listen to notes from any website, combining a Chrome extension with a Go/Fiber backend and a React admin panel.
 - **Video Translator + Voice Cloning**: A local AI dubbing pipeline using Python, the OpenVoice library, and GPT/Google Translate that transcribes audio, translates it into a target language, clones the original speaker's voice, and syncs the dubbed speech back into the video.
 
 Primary technologies I have worked on include:
