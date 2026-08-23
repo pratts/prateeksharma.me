@@ -3,5 +3,5 @@
 	url = https://github.com/tomfran/typo.git
 [submodule "public"]
 	path = public
-	url = git@github.com-pratts:pratts/pratts.github.io.git
+	url = git@github.com:pratts/pratts.github.io.git
 	branch = main
