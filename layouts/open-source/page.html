@@ -1,0 +1,31 @@
+{{ define "main" }}
+  {{ $type := .Params.contribution_type | default "other" }}
+  <article class="mx-auto max-w-2xl">
+    <header class="mb-6 border-b border-slate-300/70 pb-5 dark:border-slate-700">
+      <div class="mb-3 flex flex-wrap items-center gap-1 font-mono text-xs nerdy-muted-soft">
+        <a class="text-accent-purple hover:underline" href="{{ "/open-source/" | relURL }}">~/open-source</a>
+        <span>/</span>
+        <span class="text-accent-amber">{{ .File.ContentBaseName }}</span>
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight text-slate-950 dark:text-white md:text-3xl">{{ .Title }}</h1>
+      <div class="mt-4 nerdy-meta-row">
+        <span class="nerdy-cat-link">{{ $type | humanize }}</span>
+        {{ with .Params.project }}<span class="font-mono text-accent-purple">{{ . }}</span>{{ end }}
+        {{ if not .Date.IsZero }}<span aria-hidden="true">·</span><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>{{ end }}
+        {{ with .Params.status }}<span aria-hidden="true">·</span><span>{{ . }}</span>{{ end }}
+      </div>
+      {{ with .Params.link }}
+        <a class="mt-4 inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white/90 px-3.5 py-2 text-sm font-medium text-slate-800 transition-colors hover:border-accent-purple/40 hover:text-slate-950 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200" href="{{ . }}" target="_blank" rel="noopener noreferrer">
+          {{ partial "components/icon.html" (dict "name" "external" "class" "h-4 w-4") }}<span>View on {{ if findRE "github" . }}GitHub{{ else }}source{{ end }}</span>
+        </a>
+      {{ end }}
+      {{ partial "components/taxonomy-links.html" (dict "page" . "compact" true) }}
+    </header>
+
+    <div class="nerdy-prose prose prose-slate max-w-none dark:prose-invert">
+      {{ .Content }}
+    </div>
+
+    {{ partial "components/related.html" . }}
+  </article>
+{{ end }}

@@ -1,0 +1,27 @@
+{{ define "main" }}
+  {{ $singular := .Data.Singular }}
+  {{ $isTag := eq .Data.Plural "tags" }}
+  <div class="mx-auto max-w-4xl">
+    {{ partial "components/page-heading.html" (dict
+      "title" .Title
+      "description" (.Description | default (printf "Every %s used across blog posts, opinions, projects, books, experience, and open-source work." $singular))
+      "eyebrow" (printf "~/%s" .Data.Plural)
+      "accent" (cond $isTag "cyan" "purple")) }}
+
+    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-10 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
+
+    {{ $terms := .Data.Terms.ByCount }}
+    {{ if $terms }}
+      <div class="flex flex-wrap gap-2.5">
+        {{ range $terms }}
+          <a class="{{ cond $isTag "nerdy-tag-link" "nerdy-cat-link" }} !text-sm !px-3 !py-1.5" href="{{ .Page.RelPermalink }}">
+            {{ if $isTag }}#{{ end }}{{ .Page.Title }}
+            <span class="ml-1.5 opacity-60">{{ .Count }}</span>
+          </a>
+        {{ end }}
+      </div>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "message" "No terms yet.") }}
+    {{ end }}
+  </div>
+{{ end }}

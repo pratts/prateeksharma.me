@@ -1,0 +1,20 @@
+{{- $t := hugo.Data.terminal -}}
+{{- $config := $t.config | default dict -}}
+{{- $commands := $t.commands | default slice -}}
+{{- $builtins := $config.builtins | default slice -}}
+
+<div class="hidden" aria-hidden="true">
+  <template data-terminal-file="interests.txt"><pre class="font-mono whitespace-pre-wrap leading-relaxed">{{ range $t.interests }}<span class="text-accent-emerald">{{ . }}</span>
+{{ end }}</pre></template>
+
+  {{ range $commands }}
+    {{- $name := .name -}}
+    <template
+      data-terminal-command="{{ $name }}"
+      data-label="{{ .label | default (title $name) }}"
+      data-description="{{ .description }}"
+      data-quick="{{ cond (eq .quick true) "true" "false" }}"
+      data-weight="{{ .weight | default 999 }}"
+    >{{- partial "terminal/render.html" (dict "cmd" . "t" $t "builtins" $builtins "commands" $commands) -}}</template>
+  {{ end }}
+</div>

@@ -1,0 +1,91 @@
+baseURL = "https://prateeksharma.me/"
+defaultContentLanguage = "en"
+title = "Prateek Sharma"
+
+[languages.en]
+  locale = "en-us"
+  weight = 1
+
+[security]
+  [security.exec]
+    allow = ['^(dart-)?sass$', '^go$', '^git$', '^node$', '^npx$', '^postcss$', '^tailwindcss$']
+enableRobotsTXT = true
+enableGitInfo = false
+enableEmoji = true
+
+# Reading-time / summary tuning for long-form writing.
+summaryLength = 40
+
+[pagination]
+  pagerSize = 10
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+[params]
+  description = "Prateek Sharma is a software engineer focused on backend systems, distributed systems, databases, and infrastructure. Notes, projects, writing, and a bookshelf."
+  author = "Prateek Sharma"
+  # Used for Open Graph / Twitter cards when a page has no image of its own.
+  images = ["images/profile.jpg"]
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+    ordered = false
+  [markup.highlight]
+    noClasses = true
+    lineNos = false
+    tabWidth = 2
+    style = "github-dark"
+
+[build]
+  [build.buildStats]
+    enable = true
+  [[build.cachebusters]]
+    source = 'assets/notwatching/hugo_stats\.json'
+    target = 'css'
+  [[build.cachebusters]]
+    source = '(postcss|tailwind)\.config\.(js|mjs|ts)'
+    target = 'css'
+
+[outputs]
+  home = ["HTML", "RSS", "robots"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML"]
+  term = ["HTML", "RSS"]
+
+[services]
+  [services.rss]
+    limit = 20
+
+[sitemap]
+  changefreq = "weekly"
+  priority = 0.5
+  filename = "sitemap.xml"
+
+[minify]
+  disableXML = true
+
+[related]
+  threshold = 80
+  includeNewer = true
+  toLower = true
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+  [[related.indices]]
+    name = "categories"
+    weight = 70
+  [[related.indices]]
+    name = "date"
+    weight = 10
+
+[permalinks]
+  blog = "/blog/:contentbasename/"
+  opinions = "/opinions/:contentbasename/"
+  projects = "/projects/:contentbasename/"
+  "open-source" = "/open-source/:contentbasename/"

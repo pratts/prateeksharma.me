@@ -1,0 +1,19 @@
+{{ define "main" }}
+  {{ $pages := .Pages.ByDate.Reverse }}
+  <div class="mx-auto max-w-3xl">
+    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Shorter takes on engineering, tooling, hiring, and working in startups. Some are a paragraph.") "eyebrow" "~/opinions" "accent" "amber") }}
+    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-8 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
+
+    {{ if $pages }}
+      <div class="nerdy-card px-5 py-2 sm:px-6">
+        {{ range $pages }}{{ partial "cards/opinion-row.html" . }}{{ end }}
+      </div>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "message" "No opinions yet.") }}
+    {{ end }}
+
+    <p class="mt-8 font-mono text-xs nerdy-muted-soft">
+      Subscribe: <a class="nerdy-link" href="{{ "/opinions/index.xml" | relURL }}">RSS</a>
+    </p>
+  </div>
+{{ end }}

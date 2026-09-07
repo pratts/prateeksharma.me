@@ -1,0 +1,74 @@
+{{- $p := hugo.Data.profile -}}
+
+<aside class="nerdy-sticky-sidebar lg:sticky lg:top-8 lg:col-span-4 lg:h-fit lg:self-start">
+  <div class="flex flex-col gap-6">
+    {{- /* Identity card */ -}}
+    <section class="nerdy-sidebar-card">
+      <div class="mb-5 flex items-center gap-4">
+        <div class="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-slate-300/80 bg-slate-100/90 dark:border-slate-600 dark:bg-slate-900/70">
+          {{- with resources.Get $p.photo -}}
+            {{- $img := .Fill "160x160 Center webp q88" -}}
+            {{- $img2x := .Fill "320x320 Center webp q80" -}}
+            <img class="h-full w-full object-cover" src="{{ $img.RelPermalink }}" srcset="{{ $img.RelPermalink }} 1x, {{ $img2x.RelPermalink }} 2x" width="160" height="160" alt="{{ $p.name }}" loading="eager" decoding="async" fetchpriority="high">
+          {{- else -}}
+            <span class="flex h-full w-full items-center justify-center font-mono text-2xl text-accent-cyan">{}</span>
+          {{- end -}}
+        </div>
+        <div class="min-w-0">
+          <h1 class="text-xl font-bold tracking-tight text-slate-950 dark:text-white">{{ $p.name }}</h1>
+          <p class="mt-1 font-mono text-sm text-accent-cyan">{{ $p.title }}</p>
+        </div>
+      </div>
+
+      {{ with $p.tagline }}<p class="mb-5 text-sm leading-relaxed nerdy-muted">{{ . }}</p>{{ end }}
+
+      {{ with $p.status }}
+        <div class="mb-5 flex flex-col gap-2 rounded-lg border border-slate-300/70 bg-slate-50/95 p-4 font-mono text-xs shadow-inner dark:border-slate-700 dark:bg-slate-900/45">
+          <div class="flex items-center gap-3">
+            <span class="h-2 w-2 animate-pulse rounded-full bg-accent-emerald shadow-[0_0_10px_rgba(16,185,129,0.75)]"></span>
+            <span class="text-slate-800 dark:text-slate-300">{{ .label }}: <span class="font-bold text-slate-950 dark:text-white">{{ .value }}</span></span>
+          </div>
+          <div class="pl-5 nerdy-muted">└─ {{ .preference_label }}: <span class="text-accent-cyan">{{ .preference }}</span></div>
+        </div>
+      {{ end }}
+
+      {{ with $p.links }}
+        <div class="flex flex-col gap-3">
+          {{ range . }}
+            <a class="group flex items-center gap-3 text-sm nerdy-muted transition-colors hover:text-slate-950 dark:hover:text-white" href="{{ .url }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener noreferrer me"{{ end }}>
+              <span class="transition-colors group-hover:text-accent-cyan">{{ partial "components/icon.html" (dict "name" .icon "class" "h-5 w-5") }}</span>
+              {{ .label }}
+            </a>
+          {{ end }}
+        </div>
+      {{ end }}
+    </section>
+
+    {{- /* Stats card */ -}}
+    {{ with $p.stats }}
+      <section class="nerdy-sidebar-card">
+        <h2 class="mb-4 font-mono text-xs font-bold uppercase tracking-widest nerdy-muted-soft">profile_stats</h2>
+        <div class="space-y-3 font-mono text-xs">
+          {{ range . }}
+            {{ $accent := partial "components/accent-classes.html" (.accent | default "cyan") }}
+            <div class="flex items-center justify-between gap-4 border-b border-slate-200/80 pb-2 last:border-b-0 last:pb-0 dark:border-slate-700/50">
+              <span class="nerdy-muted">{{ .label }}</span>
+              <span class="text-right font-bold {{ $accent.icon }}">{{ .value }}</span>
+            </div>
+          {{ end }}
+        </div>
+      </section>
+    {{ end }}
+
+    {{- /* Stack card */ -}}
+    {{ with $p.stack }}
+      <section class="nerdy-sidebar-card">
+        <h2 class="mb-4 font-mono text-xs font-bold uppercase tracking-widest nerdy-muted-soft">core_stack</h2>
+        <div class="flex flex-wrap gap-2">
+          {{ range . }}<span class="nerdy-chip nerdy-chip-cyan">{{ . }}</span>{{ end }}
+        </div>
+        <p class="mt-4 text-xs nerdy-muted-soft">Full history in <a class="nerdy-link" href="/about/">/about</a> &amp; <a class="nerdy-link" href="/experience/">/experience</a>.</p>
+      </section>
+    {{ end }}
+  </div>
+</aside>

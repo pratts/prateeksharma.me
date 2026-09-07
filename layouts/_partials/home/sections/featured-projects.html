@@ -1,0 +1,24 @@
+{{- $cfg := . -}}
+{{- $limit := $cfg.limit | default 4 -}}
+{{- $projects := where (where site.RegularPages "Section" "projects") "Params.featured" true -}}
+{{- $projects = $projects.ByWeight -}}
+{{- if lt (len $projects) 1 }}{{ $projects = (where site.RegularPages "Section" "projects").ByDate.Reverse }}{{ end -}}
+{{- $projects = first $limit $projects -}}
+
+<section class="mt-4" id="featured-projects">
+  {{ partial "components/section-heading.html" (dict "icon" ($cfg.icon | default "code") "title" ($cfg.title | default "Featured Projects") "prefix" "<<" "suffix" ">>") }}
+  {{ if $projects }}
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {{ range $projects }}{{ partial "cards/project-card.html" . }}{{ end }}
+    </div>
+    <a class="mt-4 inline-flex items-center gap-1.5 font-mono text-sm nerdy-link" href="/projects/">View all projects {{ partial "components/icon.html" (dict "name" "arrow-right" "class" "h-4 w-4") }}</a>
+  {{ else }}
+    {{ partial "components/empty-state.html" (dict "parts" (slice
+      (dict "text" "No projects yet. Add page bundles under ")
+      (dict "type" "code" "text" "content/projects/")
+      (dict "text" " with front matter " )
+      (dict "type" "code" "text" "featured: true")
+      (dict "text" ".")
+    )) }}
+  {{ end }}
+</section>

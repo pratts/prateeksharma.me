@@ -1,0 +1,59 @@
+{{ define "main" }}
+  {{ $page := . }}
+  {{ $status := .Params.status | default "want-to-read" }}
+  {{ $statusLabel := dict "reading" "Reading" "read" "Read" "want-to-read" "Want to read" "paused" "Paused" "abandoned" "Abandoned" }}
+  {{ $cover := .Resources.GetMatch "cover.{jpg,jpeg,png,webp}" }}
+
+  <div class="mx-auto max-w-4xl">
+    <div class="mb-3 flex flex-wrap items-center gap-1 font-mono text-xs nerdy-muted-soft">
+      <a class="text-accent-cyan hover:underline" href="{{ "/books/" | relURL }}">~/books</a>
+      <span>/</span>
+      <span class="text-accent-amber">{{ .File.ContentBaseName }}</span>
+    </div>
+
+    <div class="grid gap-8 sm:grid-cols-[180px_1fr]">
+      <div class="mx-auto w-40 sm:mx-0 sm:w-full">
+        <div class="nerdy-book-cover">
+          {{ with $cover }}
+            {{ $img := .Fill "480x720 Center webp q85" }}
+            <img class="h-full w-full object-cover" src="{{ $img.RelPermalink }}" width="480" height="720" alt="Cover of {{ $page.Title }}" loading="eager">
+          {{ else }}
+            <div class="nerdy-book-cover-fallback"><span class="font-bold text-slate-700 dark:text-slate-300">{{ .Title }}</span>{{ with .Params.author }}<span>{{ . }}</span>{{ end }}</div>
+          {{ end }}
+        </div>
+      </div>
+
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight text-slate-950 dark:text-white md:text-3xl">{{ .Title }}</h1>
+        {{ with .Params.author }}<p class="mt-1 text-base nerdy-muted">by {{ . }}</p>{{ end }}
+
+        <dl class="mt-5 grid grid-cols-2 gap-x-6 gap-y-3 font-mono text-xs">
+          <div><dt class="nerdy-muted-soft">status</dt><dd class="mt-0.5 font-bold text-accent-cyan">{{ index $statusLabel $status | default $status }}</dd></div>
+          {{ with .Params.rating }}<div><dt class="nerdy-muted-soft">rating</dt><dd class="mt-0.5 text-accent-amber">{{ $r := int . }}{{ range seq $r }}★{{ end }}{{ if lt $r 5 }}{{ range seq (sub 5 $r) }}<span class="text-slate-300 dark:text-slate-600">★</span>{{ end }}{{ end }} <span class="nerdy-muted-soft">{{ $r }}/5</span></dd></div>{{ end }}
+          {{ with .Params.started }}<div><dt class="nerdy-muted-soft">started</dt><dd class="mt-0.5 nerdy-muted">{{ . }}</dd></div>{{ end }}
+          {{ with .Params.finished }}<div><dt class="nerdy-muted-soft">finished</dt><dd class="mt-0.5 nerdy-muted">{{ . }}</dd></div>{{ end }}
+        </dl>
+
+        {{ with .Params.link }}
+          <a class="mt-4 inline-flex items-center gap-2 text-sm nerdy-link" href="{{ . }}" target="_blank" rel="noopener noreferrer">
+            {{ partial "components/icon.html" (dict "name" "external" "class" "h-4 w-4") }}<span>More about this book</span>
+          </a>
+        {{ end }}
+        {{ partial "components/taxonomy-links.html" (dict "page" .) }}
+      </div>
+    </div>
+
+    <div class="nerdy-divider"></div>
+
+    {{ $body := .Content | plainify | strings.TrimSpace }}
+    {{ if $body }}
+      <div class="nerdy-prose prose prose-slate max-w-none dark:prose-invert">
+        {{ .Content }}
+      </div>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "message" "TODO: Add review / notes for this book.") }}
+    {{ end }}
+
+    {{ partial "components/related.html" . }}
+  </div>
+{{ end }}

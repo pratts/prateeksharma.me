@@ -1,0 +1,9 @@
+{{ define "main" }}
+  <div class="mx-auto max-w-3xl">
+    {{ partial "components/page-heading.html" (dict "title" .Title "description" .Description "eyebrow" (printf "~%s" .RelPermalink) "accent" "cyan") }}
+    <article class="nerdy-prose prose prose-slate max-w-none dark:prose-invert">
+      {{ .Content }}
+    </article>
+    {{ partial "components/related.html" . }}
+  </div>
+{{ end }}

@@ -1,0 +1,30 @@
+{{ define "main" }}
+  <article class="mx-auto max-w-3xl">
+    <header class="mb-8 border-b border-slate-300/70 pb-6 dark:border-slate-700">
+      <div class="mb-3 flex flex-wrap items-center gap-1 font-mono text-xs nerdy-muted-soft">
+        <a class="text-accent-emerald hover:underline" href="{{ "/experience/" | relURL }}">~/experience</a>
+        <span>/</span>
+        <span class="text-accent-amber">{{ .File.ContentBaseName }}</span>
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight text-slate-950 dark:text-white md:text-4xl">{{ .Params.company | default .Title }}</h1>
+      <p class="mt-2 font-mono text-sm text-accent-cyan">{{ .Params.role }}</p>
+      <div class="mt-4 nerdy-meta-row">
+        <span>{{ .Params.start }} — {{ .Params.end | default "Present" }}</span>
+        {{ with .Params.location }}<span aria-hidden="true">·</span><span>{{ . }}</span>{{ end }}
+      </div>
+      {{ with .Params.description }}<p class="mt-4 max-w-2xl text-sm leading-6 nerdy-muted">{{ . }}</p>{{ end }}
+      {{ with .Params.tags }}
+        <div class="mt-4 flex flex-wrap gap-2">
+          {{ range . }}<span class="rounded-full border border-slate-300/70 bg-slate-100/80 px-2.5 py-1 font-mono text-[11px] leading-none text-slate-600 dark:border-slate-700/80 dark:bg-slate-800/70 dark:text-slate-400">{{ . }}</span>{{ end }}
+        </div>
+      {{ end }}
+    </header>
+
+    <div class="nerdy-prose prose prose-slate max-w-none dark:prose-invert">
+      {{ .Content }}
+    </div>
+
+    {{ partial "components/post-footer-nav.html" . }}
+    {{ partial "components/related.html" . }}
+  </article>
+{{ end }}

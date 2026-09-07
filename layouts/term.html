@@ -1,0 +1,36 @@
+{{ define "main" }}
+  {{ $isTag := eq .Data.Plural "tags" }}
+  {{ $sectionOrder := slice "blog" "opinions" "projects" "open-source" "books" "experience" }}
+  {{ $sectionLabels := dict "blog" "Blog" "opinions" "Opinions" "projects" "Projects" "open-source" "Open Source" "books" "Books" "experience" "Experience" }}
+  <div class="mx-auto max-w-4xl">
+    {{ partial "components/page-heading.html" (dict
+      "title" (printf "%s%s" (cond $isTag "#" "") .Title)
+      "description" (printf "%d page%s tagged across the site." (len .Pages) (cond (eq (len .Pages) 1) "" "s"))
+      "eyebrow" (printf "~/%s/%s" .Data.Plural (.Title | urlize))
+      "accent" (cond $isTag "cyan" "purple")) }}
+
+    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-10 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
+
+    {{ $pages := .Pages }}
+
+    <div class="flex flex-col gap-10">
+      {{ range $sectionOrder }}
+        {{ $sec := . }}
+        {{ with where $pages "Section" $sec }}
+          <section>
+            {{ partial "components/section-heading.html" (dict "icon" "folder" "title" (index $sectionLabels $sec | default (humanize $sec)) "prefix" ">>" "class" "mb-4") }}
+            <div class="grid gap-3">
+              {{ range (sort . "Date" "desc") }}
+                <a class="group relative flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 nerdy-card nerdy-card-hover nerdy-card-accent-cyan p-4" href="{{ .RelPermalink }}">
+                  <span class="text-base font-semibold nerdy-card-title nerdy-title-accent-cyan">{{ .Title }}</span>
+                  {{ if not .Date.IsZero }}<time class="font-mono text-xs nerdy-muted-soft" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>{{ end }}
+                  {{ with .Description | default .Summary }}<p class="w-full text-sm leading-6 nerdy-muted line-clamp-2">{{ . | plainify }}</p>{{ end }}
+                </a>
+              {{ end }}
+            </div>
+          </section>
+        {{ end }}
+      {{ end }}
+    </div>
+  </div>
+{{ end }}

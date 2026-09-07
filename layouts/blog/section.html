@@ -1,0 +1,21 @@
+{{ define "main" }}
+  {{ $pages := .Pages.ByDate.Reverse }}
+  <div class="mx-auto max-w-4xl">
+    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Long-form technical writing.") "eyebrow" "~/blog" "accent" "cyan") }}
+    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-10 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
+
+    {{ if $pages }}
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {{ range $pages }}{{ partial "cards/blog-card.html" . }}{{ end }}
+      </div>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "message" "No posts yet.") }}
+    {{ end }}
+
+    <p class="mt-8 font-mono text-xs nerdy-muted-soft">
+      Subscribe: <a class="nerdy-link" href="{{ "/blog/index.xml" | relURL }}">RSS</a> ·
+      Browse by <a class="nerdy-link" href="{{ "/categories/" | relURL }}">category</a> or
+      <a class="nerdy-link" href="{{ "/tags/" | relURL }}">tag</a>
+    </p>
+  </div>
+{{ end }}

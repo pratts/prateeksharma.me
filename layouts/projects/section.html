@@ -1,0 +1,16 @@
+{{ define "main" }}
+  {{ $pages := .Pages }}
+  {{ $featured := where $pages "Params.featured" true }}
+  <div class="mx-auto max-w-5xl">
+    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Things I have personally built or maintained. Company work lives under Experience.") "eyebrow" "~/projects" "accent" "cyan") }}
+    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-10 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
+
+    {{ if $pages }}
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+        {{ range (sort $pages "Params.featured" "desc") }}{{ partial "cards/project-card.html" . }}{{ end }}
+      </div>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "message" "No projects yet.") }}
+    {{ end }}
+  </div>
+{{ end }}

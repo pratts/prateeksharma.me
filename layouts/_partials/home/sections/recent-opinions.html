@@ -1,0 +1,19 @@
+{{- $cfg := . -}}
+{{- $limit := $cfg.limit | default 5 -}}
+{{- $items := first $limit (where site.RegularPages "Section" "opinions").ByDate.Reverse -}}
+
+<section class="mt-10" id="recent-opinions">
+  {{ partial "components/section-heading.html" (dict "icon" ($cfg.icon | default "chat") "title" ($cfg.title | default "Recent Opinions") "prefix" "<<" "suffix" ">>") }}
+  {{ if $items }}
+    <div class="nerdy-card px-5 py-2 sm:px-6">
+      {{ range $items }}{{ partial "cards/opinion-row.html" . }}{{ end }}
+    </div>
+    <a class="mt-4 inline-flex items-center gap-1.5 font-mono text-sm nerdy-link" href="/opinions/">All opinions {{ partial "components/icon.html" (dict "name" "arrow-right" "class" "h-4 w-4") }}</a>
+  {{ else }}
+    {{ partial "components/empty-state.html" (dict "parts" (slice
+      (dict "text" "No opinions yet. Add Markdown files under ")
+      (dict "type" "code" "text" "content/opinions/")
+      (dict "text" ".")
+    )) }}
+  {{ end }}
+</section>

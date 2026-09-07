@@ -1,0 +1,19 @@
+{{ define "main" }}
+  <div class="mx-auto max-w-4xl">
+    {{ partial "components/page-heading.html" (dict "title" .Title "description" .Description "eyebrow" (printf "~%s" .RelPermalink) "accent" "emerald") }}
+    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-10 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
+    <div class="grid gap-4">
+      {{ range .Pages.ByDate.Reverse }}
+        <a class="group nerdy-card nerdy-card-hover nerdy-card-accent-cyan relative block p-5" href="{{ .RelPermalink }}">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold nerdy-card-title nerdy-title-accent-cyan">{{ .Title }}</h2>
+            {{ if not .Date.IsZero }}<time class="font-mono text-xs nerdy-muted-soft" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>{{ end }}
+          </div>
+          {{ with .Description | default .Summary }}<p class="mt-2 line-clamp-2 text-sm leading-6 nerdy-muted">{{ . | plainify }}</p>{{ end }}
+        </a>
+      {{ else }}
+        {{ partial "components/empty-state.html" (dict "message" "Nothing here yet.") }}
+      {{ end }}
+    </div>
+  </div>
+{{ end }}

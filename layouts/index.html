@@ -1,0 +1,32 @@
+{{ define "main" }}
+  {{ $sections := hugo.Data.home.sections | default slice }}
+  <div class="nerdy-page-surface nerdy-page-surface--home">
+    <div class="nerdy-ambient-bg"></div>
+    <div class="nerdy-top-glow"></div>
+
+    <div class="nerdy-container pt-10 lg:pt-14">
+      <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-12">
+        {{ partial "home/sidebar.html" . }}
+
+        <div class="flex flex-col gap-8 lg:col-span-8">
+          {{ with .Content }}
+            <div class="nerdy-prose prose prose-slate max-w-none text-sm dark:prose-invert">
+              {{ . }}
+            </div>
+          {{ end }}
+
+          {{ partial "terminal.html" . }}
+
+          {{ range $sections }}
+            {{ $partial := printf "home/sections/%s.html" .type }}
+            {{ if templates.Exists (printf "_partials/%s" $partial) }}
+              {{ partial $partial . }}
+            {{ else }}
+              {{ errorf "Unknown home section type %q (expected layouts/_partials/%s)" .type $partial }}
+            {{ end }}
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+{{ end }}

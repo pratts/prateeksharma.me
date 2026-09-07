@@ -1,0 +1,123 @@
+# Interactive terminal on the homepage. Personality feature — every command here
+# also has a normal page/section a visitor can reach through the main navigation.
+config:
+  user: guest
+  host: prateeksharma
+  directory: "~"
+  window_title: "guest@prateeksharma: ~"
+  auto_command: whoami
+  builtins:
+    - name: clear
+      description: Clear the terminal output
+    - name: cat
+      description: Print a file (try `cat interests.txt`)
+    - name: pwd
+      description: Print working directory
+    - name: date
+      description: Print the current date
+    - name: echo
+      description: Echo text back
+    - name: sudo
+      description: Attempt elevated privileges
+
+# whoami / about text.
+whoami:
+  lines:
+    - "Prateek Sharma"
+    - "Software Engineer — Backend / Systems / Distributed Systems"
+    - "10+ years. Fintech & crypto, B2B SaaS, real-time gaming."
+
+about:
+  summary: >-
+    I build backend systems and infrastructure where correctness, reliability, and
+    scale matter — APIs, data models, workflow orchestration, and observability.
+  details:
+    - "Currently exploring Go and systems internals through hobby projects."
+    - "Off-screen: books and calisthenics."
+
+# `cat interests.txt`
+interests:
+  - backend
+  - distributed-systems
+  - databases
+  - networking
+  - infrastructure
+  - reliability
+  - developer-tooling
+  - golang
+
+# Contact block.
+contact:
+  intro: "Reach me here —"
+  email: prateeksharma.2801@gmail.com
+  links:
+    - label: GitHub
+      url: https://github.com/pratts
+    - label: LinkedIn
+      url: https://www.linkedin.com/in/prateeksharma28/
+    - label: Résumé
+      url: /resume/
+
+# `stack` — grouped, terminal-styled.
+stack:
+  - key: languages
+    items: [Go, TypeScript, Python, Java]
+  - key: backend
+    items: [Node.js, NestJS, Django, Flask, Spring Boot]
+  - key: data
+    items: [PostgreSQL, Redis, Snowflake, Meilisearch, MongoDB]
+  - key: infra
+    items: [AWS, Docker, Kubernetes, Temporal, OpenTelemetry]
+
+# Command registry. `source: content` commands list the matching site section.
+commands:
+  - name: help
+    description: List available commands
+    weight: 0
+  - name: whoami
+    description: Print identity
+    weight: 10
+    quick: true
+  - name: about
+    description: Short bio
+    weight: 20
+    quick: true
+    page: /about/
+  - name: ls
+    description: List sections of this site
+    weight: 30
+    quick: true
+  - name: stack
+    description: Languages and tools I work with
+    weight: 40
+    quick: true
+  - name: projects
+    description: Things I have built
+    weight: 50
+    quick: true
+    section: projects
+    page: /projects/
+  - name: experience
+    description: Where I have worked
+    weight: 60
+    section: experience
+    page: /experience/
+  - name: blog
+    description: Long-form technical writing
+    weight: 70
+    section: blog
+    page: /blog/
+  - name: opinions
+    description: Shorter takes
+    weight: 80
+    section: opinions
+    page: /opinions/
+  - name: books
+    description: What I am reading
+    weight: 90
+    section: books
+    page: /books/
+  - name: contact
+    description: How to reach me
+    weight: 100
+    quick: true

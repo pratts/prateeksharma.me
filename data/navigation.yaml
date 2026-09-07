@@ -1,0 +1,63 @@
+# Data-driven navigation. Add items or nested `children` here — no template changes needed.
+# `url` may be an internal path (starts with /) or an external URL.
+# A top-level item with `children` renders as an accessible disclosure menu.
+main:
+  - name: About
+    url: /about/
+  - name: Experience
+    url: /experience/
+  - name: Projects
+    url: /projects/
+  - name: Open Source
+    url: /open-source/
+  - name: Writing
+    url: /blog/
+    children:
+      - name: Blog
+        url: /blog/
+      - name: Opinions
+        url: /opinions/
+  - name: Books
+    url: /books/
+    children:
+      - name: Bookshelf
+        url: /books/
+      - name: Reviews
+        url: /books/reviews/
+      - name: Reading List
+        url: /books/reading-list/
+  - name: Tags
+    url: /tags/
+
+# Footer link groups.
+footer:
+  - title: Site
+    items:
+      - name: About
+        url: /about/
+      - name: Experience
+        url: /experience/
+      - name: Projects
+        url: /projects/
+      - name: Open Source
+        url: /open-source/
+  - title: Writing
+    items:
+      - name: Blog
+        url: /blog/
+      - name: Opinions
+        url: /opinions/
+      - name: Categories
+        url: /categories/
+      - name: Tags
+        url: /tags/
+  - title: Elsewhere
+    items:
+      - name: GitHub
+        url: https://github.com/pratts
+      - name: LinkedIn
+        url: https://www.linkedin.com/in/prateeksharma28/
+      - name: Résumé
+        url: /resume/
+      - name: RSS
+        url: /blog/index.xml

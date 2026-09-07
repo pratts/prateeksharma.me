@@ -1,0 +1,60 @@
+{{- $nav := hugo.Data.navigation.main -}}
+{{- $current := .RelPermalink -}}
+
+<header class="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-xl">
+  <nav class="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 pr-16 sm:px-6 sm:pr-20 lg:px-8 lg:pr-20" aria-label="Main">
+    <a class="group inline-flex shrink-0 items-center gap-2 text-base font-bold" href="{{ site.Home.RelPermalink }}">
+      <span class="flex h-8 w-8 items-center justify-center rounded-lg border border-primary/30 bg-primary/10 font-mono text-sm text-primary transition group-hover:scale-105">~/</span>
+      <span class="hidden sm:inline">{{ site.Title }}</span>
+    </a>
+
+    {{- /* Mobile: disclosure menu. Works without JavaScript. */ -}}
+    <details class="nerdy-nav-mobile lg:hidden">
+      <summary class="nerdy-icon-button list-none" aria-label="Toggle navigation menu">
+        {{ partial "components/icon.html" (dict "name" "list" "class" "h-4 w-4") }}
+      </summary>
+      <div class="nerdy-nav-mobile-panel">
+        <ul class="flex flex-col gap-1">
+          {{ range $nav }}
+            <li>
+              <a class="nerdy-nav-mobile-link {{ if hasPrefix $current .url }}is-current{{ end }}" href="{{ .url }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a>
+              {{ with .children }}
+                <ul class="ml-3 mt-1 flex flex-col gap-1 border-l border-border pl-3">
+                  {{ range . }}
+                    <li><a class="nerdy-nav-mobile-link {{ if eq $current .url }}is-current{{ end }}" href="{{ .url }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a></li>
+                  {{ end }}
+                </ul>
+              {{ end }}
+            </li>
+          {{ end }}
+        </ul>
+      </div>
+    </details>
+
+    {{- /* Desktop: menubar with CSS hover/focus-within dropdowns. */ -}}
+    <ul class="nerdy-nav hidden items-center gap-1 lg:flex" role="menubar">
+      {{ range $nav }}
+        {{ $isActive := or (eq $current .url) (and (ne .url "/") (hasPrefix $current .url)) }}
+        {{ if .children }}
+          <li class="nerdy-nav-item" role="none">
+            <a class="nerdy-nav-link {{ if $isActive }}is-current{{ end }}" href="{{ .url }}" aria-haspopup="true">
+              {{ .name }}
+              <svg class="h-3.5 w-3.5 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
+            </a>
+            <div class="nerdy-nav-panel">
+              <ul class="flex flex-col gap-0.5" role="menu">
+                {{ range .children }}
+                  <li role="none"><a class="nerdy-nav-panel-link {{ if eq $current .url }}is-current{{ end }}" role="menuitem" href="{{ .url }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a></li>
+                {{ end }}
+              </ul>
+            </div>
+          </li>
+        {{ else }}
+          <li class="nerdy-nav-item" role="none">
+            <a class="nerdy-nav-link {{ if $isActive }}is-current{{ end }}" role="menuitem" href="{{ .url }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a>
+          </li>
+        {{ end }}
+      {{ end }}
+    </ul>
+  </nav>
+</header>

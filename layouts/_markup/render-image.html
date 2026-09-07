@@ -1,0 +1,16 @@
+{{- /* Wrap Markdown images in a figure; use figcaption when a title is set. */ -}}
+{{- $u := urls.Parse .Destination -}}
+{{- if or $u.IsAbs (hasPrefix .Destination "/") -}}
+  <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}"{{ with .Title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async">
+{{- else -}}
+  {{- with .Page.Resources.GetMatch .Destination -}}
+    {{- $img := . -}}
+    {{- if ne $img.MediaType.SubType "svg" -}}{{- $img = .Resize "1400x webp q85" -}}{{- end -}}
+    <figure>
+      <img src="{{ $img.RelPermalink }}" alt="{{ $.Text }}"{{ with $img.Width }} width="{{ . }}"{{ end }}{{ with $img.Height }} height="{{ . }}"{{ end }} loading="lazy" decoding="async">
+      {{- with $.Title }}<figcaption>{{ . }}</figcaption>{{ end -}}
+    </figure>
+  {{- else -}}
+    <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" loading="lazy">
+  {{- end -}}
+{{- end -}}

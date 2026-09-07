@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth" x-data="themeToggle">
+  <head>
+    {{ partial "site/head.html" . }}
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+    <a class="nerdy-skip-link" href="#main-content">Skip to main content</a>
+    {{ partial "site/header.html" . }}
+    <main id="main-content" tabindex="-1" class="{{ if .IsHome }}w-full{{ else }}mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8{{ end }}">
+      {{ block "main" . }}{{ end }}
+    </main>
+    {{ partial "site/footer.html" . }}
+    {{ partial "site/theme-toggle-float.html" . }}
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "prateeksharma-me",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Source for prateeksharma.me — a personal engineering knowledge hub built with Hugo.",
+  "scripts": {
+    "dev": "hugo server --buildDrafts --buildFuture --disableFastRender",
+    "serve": "hugo --gc --renderToMemory && hugo server --disableFastRender",
+    "build": "hugo --gc --renderToMemory && hugo --gc --minify",
+    "clean": "rm -rf public resources .hugo_build.lock"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0",
+    "tailwindcss": "^4.1.0"
+  },
+  "dependencies": {
+    "@tailwindcss/typography": "^0.5.16",
+    "alpinejs": "^3.14.9"
+  }
+}

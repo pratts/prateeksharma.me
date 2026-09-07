@@ -1,0 +1,28 @@
+{{ define "main" }}
+  {{ $want := where (where site.RegularPages "Section" "books") "Params.status" "want-to-read" }}
+  <div class="mx-auto max-w-3xl">
+    {{ partial "components/page-heading.html" (dict "title" (.Title | default "Reading List") "description" (.Description | default "Books queued up. Aspirational, not a claim of having read them.") "eyebrow" "~/books/reading-list" "accent" "purple") }}
+    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-8 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
+
+    {{ if $want }}
+      <ul class="divide-y divide-slate-200/80 dark:divide-slate-700/50">
+        {{ range (sort $want "Params.priority" "asc") }}
+          <li class="py-3">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <a class="text-base font-semibold nerdy-card-title nerdy-title-accent-purple hover:text-accent-purple" href="{{ .RelPermalink }}">{{ .Title }}</a>
+              {{ with .Params.author }}<span class="font-mono text-xs nerdy-muted-soft">{{ . }}</span>{{ end }}
+            </div>
+            {{ with .Params.note }}<p class="mt-1 text-sm leading-6 nerdy-muted">{{ . }}</p>{{ end }}
+            {{ with .Params.tags }}<div class="mt-1.5 flex flex-wrap gap-1.5">{{ range first 4 . }}<span class="nerdy-chip nerdy-chip-purple">#{{ . }}</span>{{ end }}</div>{{ end }}
+          </li>
+        {{ end }}
+      </ul>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "parts" (slice
+        (dict "text" "Reading list is empty. Add book bundles with ")
+        (dict "type" "code" "text" "status: want-to-read")
+        (dict "text" ".")
+      )) }}
+    {{ end }}
+  </div>
+{{ end }}

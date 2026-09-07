@@ -1,0 +1,35 @@
+{{- /* Related content: explicit `related` URLs in front matter, then taxonomy-based matches. */ -}}
+{{- $page := . -}}
+{{- $items := slice -}}
+
+{{- with $page.Params.related -}}
+  {{- range . -}}
+    {{- with $.GetPage . -}}{{ $items = $items | append . }}{{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $seen := slice $page.RelPermalink -}}
+{{- range $items }}{{ $seen = $seen | append .RelPermalink }}{{ end -}}
+{{- range (first 6 (site.RegularPages.Related $page)) -}}
+  {{- if not (in $seen .RelPermalink) -}}
+    {{- $items = $items | append . -}}
+    {{- $seen = $seen | append .RelPermalink -}}
+  {{- end -}}
+{{- end -}}
+{{- $items = first 4 $items -}}
+
+{{- with $items }}
+  <aside class="nerdy-divider">
+    <h2 class="mb-4 font-mono text-xs font-bold uppercase tracking-widest nerdy-muted-soft">related</h2>
+    <ul class="grid gap-3 sm:grid-cols-2">
+      {{ range . }}
+        <li>
+          <a class="group flex flex-col gap-1 nerdy-card nerdy-card-hover nerdy-card-accent-cyan p-4" href="{{ .RelPermalink }}">
+            <span class="font-mono text-[10px] uppercase tracking-widest nerdy-muted-soft">{{ .Section }}</span>
+            <span class="text-sm font-semibold nerdy-card-title nerdy-title-accent-cyan">{{ .Title }}</span>
+          </a>
+        </li>
+      {{ end }}
+    </ul>
+  </aside>
+{{ end }}

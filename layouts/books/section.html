@@ -1,0 +1,49 @@
+{{ define "main" }}
+  {{ $books := where site.RegularPages "Section" "books" }}
+  {{ $groups := slice
+    (dict "key" "reading" "label" "Currently Reading")
+    (dict "key" "read" "label" "Read")
+    (dict "key" "want-to-read" "label" "Want to Read")
+    (dict "key" "paused" "label" "Paused")
+    (dict "key" "abandoned" "label" "Abandoned")
+  }}
+
+  <div class="mx-auto max-w-5xl" x-data="{ filter: 'all' }">
+    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "A working bookshelf — mostly systems, databases, and engineering. Ratings and notes where I have them.") "eyebrow" "~/books" "accent" "cyan") }}
+    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-8 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
+
+    <div class="mb-8 flex flex-wrap items-center gap-2 font-mono text-xs">
+      <span class="nerdy-muted-soft">view:</span>
+      {{ range (slice (dict "k" "all" "l" "All") (dict "k" "reading" "l" "Reading") (dict "k" "read" "l" "Read") (dict "k" "want-to-read" "l" "Want to read")) }}
+        <button type="button" class="rounded border border-slate-300 px-2.5 py-1 transition-colors dark:border-slate-700"
+          x-on:click="filter = '{{ .k }}'"
+          x-bind:class="filter === '{{ .k }}' ? 'border-accent-cyan bg-accent-cyan/10 text-accent-cyan' : 'text-slate-600 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white'">{{ .l }}</button>
+      {{ end }}
+      <a class="ml-auto nerdy-link" href="{{ "/books/reading-list/" | relURL }}">Reading list →</a>
+      <a class="nerdy-link" href="{{ "/books/reviews/" | relURL }}">Reviews →</a>
+    </div>
+
+    {{ if $books }}
+      {{ range $groups }}
+        {{ $g := . }}
+        {{ $items := where $books "Params.status" $g.key }}
+        {{ if $items }}
+          <section class="mb-12" x-show="filter === 'all' || filter === '{{ $g.key }}'" id="{{ $g.key }}">
+            {{ partial "components/section-heading.html" (dict "icon" "book" "title" $g.label "prefix" ">>" "class" "mb-5") }}
+            {{ $sortKey := cond (eq $g.key "want-to-read") "Params.priority" "Params.finished" }}
+            {{ $sortDir := cond (eq $g.key "want-to-read") "asc" "desc" }}
+            <div class="nerdy-book-grid">
+              {{ range (sort $items $sortKey $sortDir) }}{{ partial "cards/book-card.html" . }}{{ end }}
+            </div>
+          </section>
+        {{ end }}
+      {{ end }}
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "parts" (slice
+        (dict "text" "No books yet. Add page bundles under ")
+        (dict "type" "code" "text" "content/books/<slug>/index.md")
+        (dict "text" " with a cover image alongside.")
+      )) }}
+    {{ end }}
+  </div>
+{{ end }}

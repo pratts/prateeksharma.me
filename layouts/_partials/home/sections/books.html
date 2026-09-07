@@ -1,0 +1,24 @@
+{{- $cfg := . -}}
+{{- $limit := $cfg.limit | default 5 -}}
+{{- $books := where site.RegularPages "Section" "books" -}}
+{{- $reading := where $books "Params.status" "reading" -}}
+{{- $recent := where $books "Params.status" "read" -}}
+{{- $shelf := $reading | append $recent.ByDate.Reverse -}}
+{{- if lt (len $shelf) 1 }}{{ $shelf = (sort $books "Params.priority" "asc") }}{{ end -}}
+{{- $shelf = first $limit $shelf -}}
+
+<section class="mt-10" id="books">
+  {{ partial "components/section-heading.html" (dict "icon" ($cfg.icon | default "book") "title" ($cfg.title | default "Bookshelf") "prefix" "<<" "suffix" ">>") }}
+  {{ if $shelf }}
+    <div class="nerdy-book-grid">
+      {{ range $shelf }}{{ partial "cards/book-card.html" . }}{{ end }}
+    </div>
+    <a class="mt-5 inline-flex items-center gap-1.5 font-mono text-sm nerdy-link" href="/books/">Open the bookshelf {{ partial "components/icon.html" (dict "name" "arrow-right" "class" "h-4 w-4") }}</a>
+  {{ else }}
+    {{ partial "components/empty-state.html" (dict "parts" (slice
+      (dict "text" "No books yet. Add page bundles under ")
+      (dict "type" "code" "text" "content/books/")
+      (dict "text" ".")
+    )) }}
+  {{ end }}
+</section>

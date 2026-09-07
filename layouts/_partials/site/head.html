@@ -1,0 +1,38 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+
+{{- $title := .Title | default site.Title -}}
+{{- $isHome := .IsHome -}}
+<title>{{ if $isHome }}{{ site.Title }} — {{ hugo.Data.profile.title }}{{ else }}{{ $title }} | {{ site.Title }}{{ end }}</title>
+
+{{- $description := "" -}}
+{{- with .Description }}{{ $description = . }}{{ else }}{{ with .Summary }}{{ $description = . | plainify | truncate 200 }}{{ else }}{{ $description = site.Params.description }}{{ end }}{{ end -}}
+<meta name="description" content="{{ $description | plainify }}">
+<meta name="author" content="{{ site.Params.author }}">
+<link rel="canonical" href="{{ .Permalink }}">
+
+{{- if .Params.draft }}<meta name="robots" content="noindex, nofollow">{{ end -}}
+
+{{ partial "site/seo.html" (dict "page" . "description" $description) }}
+
+{{ range .AlternativeOutputFormats -}}
+  <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ site.Title }}">
+{{ end -}}
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90' font-family='monospace'%3E%E2%8C%98%3C/text%3E%3C/svg%3E">
+
+{{- /* Set the theme class before first paint to avoid a flash. */ -}}
+{{ with resources.Get "js/theme-scheme.js" }}
+  {{ $opts := dict "minify" (not hugo.IsDevelopment) }}
+  {{ with . | js.Build $opts }}
+    {{ if hugo.IsDevelopment }}
+      <script src="{{ .RelPermalink }}"></script>
+    {{ else }}
+      {{ with . | fingerprint }}<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous"></script>{{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ partial "site/assets/css.html" . }}
+{{ partial "site/assets/js.html" . }}
