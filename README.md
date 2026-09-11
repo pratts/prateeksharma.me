@@ -90,11 +90,13 @@ Everything lives in this one repo.
 │   ├── _index.md           # homepage intro copy
 │   ├── about.md            # /about/
 │   ├── resume.md           # /resume/
+│   ├── writing/_index.md   # /writing/ hub — aggregates blog+opinions+notes
 │   ├── experience/         # one page bundle per company
 │   ├── projects/           # one page bundle per project
 │   ├── open-source/         # one file per contribution
 │   ├── blog/               # one page bundle per post
 │   ├── opinions/            # one file per opinion
+│   ├── notes/               # one file per note (short technical fragments)
 │   └── books/
 │       ├── <slug>/index.md  # one page bundle per book (+ cover.jpg)
 │       ├── reviews/         # /books/reviews/  (layout: reviews)
@@ -121,11 +123,13 @@ Everything lives in this one repo.
 ```text
 /                         /categories/            /tags/
 /about/                   /categories/<name>/     /tags/<name>/
+/writing/                 # hub — blog + opinions + notes, newest first
 /experience/              /experience/<company>/
 /projects/                /projects/<project>/
 /open-source/             /open-source/<slug>/
 /blog/                    /blog/<post>/
 /opinions/                /opinions/<slug>/
+/notes/                   /notes/<slug>/
 /books/                   /books/<book>/
 /books/reviews/           /books/reading-list/
 /resume/
@@ -144,29 +148,30 @@ All content types share the same taxonomy: **`categories`** (broad — Backend,
 Distributed Systems, Databases, Infrastructure, Programming, Systems, Engineering,
 Career, Books) and **`tags`** (specific — Go, PostgreSQL, Redis, Kubernetes,
 Temporal, API, concurrency, system-design, …). A tag or category page aggregates
-matching blog posts, opinions, projects, books, experience, and open-source
-entries — that's the "knowledge graph."
+matching blog posts, opinions, notes, projects, books, experience, and
+open-source entries — that's the "knowledge graph."
 
-### Add a blog post
+### Writing: Blog, Opinions, and Notes
 
-```bash
-hugo new blog/my-post/index.md      # page bundle — lets you add images alongside
-```
+These are three deliberately different content types, all reachable from
+`/writing/` (which mixes and dates them together) as well as their own
+listing pages:
 
-Edit the front matter (`description`, `categories`, `tags`), set `draft = false`,
-write the body. `##` / `###` headings feed the floating table of contents. Drop
-`cover.jpg` or `hero.jpg` in the folder for a hero image. Optional
-`related = ['/projects/x/', '/books/y/']` adds explicit "related" links (taxonomy
-matches are added automatically).
+| Type     | For                                             | Command                              |
+| -------- | ------------------------------------------------ | ------------------------------------ |
+| Blog     | Substantial, structured technical writing.        | `hugo new blog/my-post/index.md`     |
+| Opinions | Short, personal takes — a paragraph is fine.      | `hugo new opinions/my-take.md`       |
+| Notes    | One fact or observation — a sentence is fine.     | `hugo new notes/some-fact.md`        |
 
-### Add an opinion
+Blog posts use a page bundle so images sit next to `index.md`; Opinions and
+Notes are single files. Common front matter: `description`, `categories`,
+`tags`; blog posts additionally support `cover.jpg`/`hero.jpg` in the bundle
+for a hero image, and `##`/`###` headings feed the floating table of contents.
+Optional `related = ['/projects/x/', '/books/y/']` adds explicit "related"
+links on top of the automatic taxonomy-based matches.
 
-```bash
-hugo new opinions/my-take.md
-```
-
-A single file (no bundle needed). One or two paragraphs is fine — the listing is
-built for short posts.
+Adding a fourth kind later (say, Essays) is a data change plus one new
+section, not a rewrite — see **Navigation** under Configuration below.
 
 ### Add a project
 
@@ -228,6 +233,22 @@ body (a paragraph is valid; or use headings like *What I liked*, *Key ideas*,
 required). Nest as deep as you like; add sections without touching a template.
 `footer` is a list of `{ title, items: [...] }` link groups.
 
+The **Writing** entry is also read programmatically by `layouts/writing/section.html`:
+its `children`'s URLs (`/blog/`, `/opinions/`, `/notes/`) tell the `/writing/`
+hub which Hugo sections to mix together, so adding a fourth writing kind is:
+
+1. `content/<kind>/` with a `page.html`/`section.html` pair copied from
+   `layouts/opinions/*.html`.
+2. One child entry here.
+3. One label + accent in `layouts/_partials/cards/writing-row.html`'s
+   `$kindMeta`.
+4. Add it to `$sectionOrder` in `layouts/term.html` if it should show up in
+   tag/category aggregation.
+
+No changes to `layouts/writing/section.html` itself. The same nesting
+supports future top-level groups (a `Knowledge` entry with Books/Papers/
+Courses children, say) without touching the header template.
+
 ### Profile & homepage identity — `data/profile.yaml`
 
 Name, title, `tagline`, `intro`, `status`, `links` (each `{ icon, label, url }`
@@ -238,7 +259,9 @@ keep these truthful, no vanity metrics), and `stack` (the curated homepage list)
 
 `sections` is an ordered list of `{ type, title, icon, limit }`. `type` maps to
 `layouts/_partials/home/sections/<type>.html`. Reorder, retitle, or drop sections
-here. Featured projects come from `featured: true`; the rest are "most recent N".
+here. Featured projects come from `featured: true`; `featured-writing` mixes the
+most recent Blog/Opinions/Notes entries (kind-labeled); the rest are "most
+recent N".
 
 ### Terminal — `data/terminal.yaml`
 
@@ -292,9 +315,10 @@ no longer part of development. This repo is the single source of truth.
 ## SEO / web
 
 Configured: canonical URLs, per-page `<title>`/description, Open Graph + Twitter
-cards, JSON-LD (`Person` on the homepage, `BlogPosting` on posts/opinions),
-`sitemap.xml`, `robots.txt`, and RSS for the home page, every section, and every
-taxonomy term (`/blog/index.xml`, `/tags/go/index.xml`, …).
+cards, JSON-LD (`Person` on the homepage, `BlogPosting` on posts/opinions/notes),
+`sitemap.xml`, `robots.txt`, and RSS for the home page, every section (including
+`/blog/index.xml`, `/opinions/index.xml`, `/notes/index.xml`), and every
+taxonomy term (`/tags/go/index.xml`, …).
 
 ## Accessibility
 
