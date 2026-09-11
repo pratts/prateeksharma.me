@@ -1,7 +1,7 @@
 {{ define "main" }}
   {{ $isTag := eq .Data.Plural "tags" }}
-  {{ $sectionOrder := slice "blog" "opinions" "projects" "open-source" "books" "experience" }}
-  {{ $sectionLabels := dict "blog" "Blog" "opinions" "Opinions" "projects" "Projects" "open-source" "Open Source" "books" "Books" "experience" "Experience" }}
+  {{ $sectionOrder := slice "blog" "opinions" "notes" "projects" "open-source" "books" "experience" }}
+  {{ $sectionLabels := dict "blog" "Blog" "opinions" "Opinions" "notes" "Notes" "projects" "Projects" "open-source" "Open Source" "books" "Books" "experience" "Experience" }}
   <div class="mx-auto max-w-4xl">
     {{ partial "components/page-heading.html" (dict
       "title" (printf "%s%s" (cond $isTag "#" "") .Title)

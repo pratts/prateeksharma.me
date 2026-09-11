@@ -17,6 +17,8 @@ main:
         url: /blog/
       - name: Opinions
         url: /opinions/
+      - name: Notes
+        url: /notes/
   - name: Books
     url: /books/
     children:
@@ -47,6 +49,8 @@ footer:
         url: /blog/
       - name: Opinions
         url: /opinions/
+      - name: Notes
+        url: /notes/
       - name: Categories
         url: /categories/
       - name: Tags

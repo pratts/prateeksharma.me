@@ -112,6 +112,11 @@ commands:
     weight: 80
     section: opinions
     page: /opinions/
+  - name: notes
+    description: Short technical fragments
+    weight: 85
+    section: notes
+    page: /notes/
   - name: books
     description: What I am reading
     weight: 90
