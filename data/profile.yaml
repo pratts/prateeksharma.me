@@ -33,7 +33,11 @@ links:
     url: mailto:prateeksharma.2801@gmail.com
   - icon: document
     label: Résumé (PDF)
-    url: /resume/
+    # Points straight at the resume itself (opens in a new tab) rather than an
+    # internal /resume/ page — keep this in sync with the same URL in
+    # data/navigation.yaml, data/terminal.yaml, and the "Résumé" links in
+    # content/about.md and content/experience/_index.md if it ever changes.
+    url: https://drive.google.com/file/d/1K3zOHEUgZ6lBQ2ntsQGcQvtzoNFtvk4x/view?usp=sharing
   - icon: stack-overflow
     label: Stack Exchange
     url: https://stackexchange.com/users/3052399/prateek

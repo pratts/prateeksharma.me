@@ -89,7 +89,6 @@ Everything lives in this one repo.
 ├── content/
 │   ├── _index.md           # homepage intro copy
 │   ├── about.md            # /about/
-│   ├── resume.md           # /resume/
 │   ├── writing/_index.md   # /writing/ hub — aggregates blog+opinions+notes
 │   ├── experience/         # one page bundle per company
 │   ├── projects/           # one page bundle per project
@@ -132,8 +131,11 @@ Everything lives in this one repo.
 /notes/                   /notes/<slug>/
 /books/                   /books/<book>/
 /books/reviews/           /books/reading-list/
-/resume/
 ```
+
+There is deliberately no `/resume/` page — every "Résumé" link (sidebar, footer,
+terminal `contact`, About, Experience) opens the actual résumé URL directly in a
+new tab. See **Résumé** under Configuration below.
 
 Leaf URLs use the file/bundle name (`permalinks` in `hugo.toml` pin
 `:contentbasename`), so renaming a file changes only that one URL. Old
@@ -280,8 +282,26 @@ quick-command bar. Rendering logic is in
 - **Content images:** put them in the page bundle and reference them with plain
   Markdown — a render hook wraps them in `<figure>` (with `<figcaption>` if the
   image has a title) and generates a resized WebP.
-- **Résumé PDF:** currently links to Google Drive (see `content/resume.md`). To
-  self-host, drop `static/resume.pdf` and change the link to `/resume.pdf`.
+### Résumé
+
+There is no `/resume/` page — "Résumé" links go straight to the actual URL and
+open in a new tab (`target="_blank"`), rather than hopping through a page on
+this site first. The same URL currently appears in five places, each with a
+short comment pointing back here:
+
+- `data/profile.yaml` — the sidebar link (icon-based, `hasPrefix .url "http"`
+  already adds `target="_blank"` generically).
+- `data/navigation.yaml` — the footer link (same generic handling).
+- `data/terminal.yaml` — the `contact` command's link list (`text:` overrides
+  the link label so the terminal doesn't print the full URL).
+- `content/about.md` and `content/experience/_index.md` — plain Markdown
+  links; the external-link render hook adds `target="_blank"` automatically.
+- `layouts/experience/section.html` — one hardcoded link ("Prefer the
+  one-pager?"), since it isn't sourced from a data file.
+
+It's currently a Google Drive link. To self-host instead, drop the PDF at
+`static/resume.pdf` and update all five URLs to `/resume.pdf` (an internal,
+site-relative link needs no `target="_blank"`).
 
 ---
 

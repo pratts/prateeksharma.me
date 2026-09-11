@@ -54,7 +54,7 @@ Try <span class="font-bold text-accent-cyan">cat interests.txt</span> or a secti
   {{ $pre | safeHTML }}{{ $t.contact.intro }}
 
 <span class="text-accent-cyan">Email   :</span> <a class="pointer-events-auto relative z-50 text-accent-amber underline" href="mailto:{{ $t.contact.email }}">{{ $t.contact.email }}</a>
-{{ range $t.contact.links }}<span class="text-accent-cyan">{{ printf "%-8s:" .label }}</span> <a class="pointer-events-auto relative z-50 nerdy-link underline" href="{{ .url }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ .url }}</a>
+{{ range $t.contact.links }}<span class="text-accent-cyan">{{ printf "%-8s:" .label }}</span> <a class="pointer-events-auto relative z-50 nerdy-link underline" href="{{ .url }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ .text | default .url }}</a>
 {{ end }}{{ $end | safeHTML }}
 
 {{- else if $cmd.section -}}
