@@ -1,0 +1,33 @@
+{{- /* Used only on the /writing/ hub, which mixes Blog + Opinions + Notes.
+       Individual section listings (/blog/, /opinions/, /notes/) keep their
+       own dedicated card partials — the kind label only earns its place
+       once entries of different kinds sit next to each other. */ -}}
+{{- $p := .page -}}
+{{- $kindMeta := dict
+  "blog"     (dict "label" "Blog"     "accent" "cyan")
+  "opinions" (dict "label" "Opinion"  "accent" "amber")
+  "notes"    (dict "label" "Note"     "accent" "purple")
+-}}
+{{- $meta := index $kindMeta $p.Section | default (dict "label" (humanize $p.Section) "accent" "cyan") -}}
+{{- $accentClasses := partial "components/accent-classes.html" $meta.accent -}}
+
+<article class="group relative border-b border-slate-200/80 py-4 last:border-b-0 dark:border-slate-700/50">
+  <div class="mb-1.5 flex flex-wrap items-center gap-2">
+    <span class="{{ $accentClasses.chip }} font-bold uppercase tracking-wider">{{ $meta.label }}</span>
+  </div>
+  <h3 class="text-base font-semibold nerdy-card-title {{ $accentClasses.title }}">
+    <a href="{{ $p.RelPermalink }}" class="after:absolute after:inset-0">{{ $p.Title }}</a>
+  </h3>
+  {{ if ne $p.Section "notes" }}
+    {{ with $p.Params.description | default $p.Summary }}<p class="mt-1 line-clamp-2 text-sm leading-6 nerdy-muted">{{ . | plainify }}</p>{{ end }}
+  {{ end }}
+  <div class="mt-2 nerdy-meta-row">
+    {{ if not $p.Date.IsZero }}<time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "Jan 2, 2006" }}</time>{{ end }}
+    {{ if eq $p.Section "blog" }}<span aria-hidden="true">·</span><span>{{ $p.ReadingTime }} min read</span>{{ end }}
+  </div>
+  {{ with $p.Params.tags }}
+    <div class="mt-2 flex flex-wrap gap-1.5">
+      {{ range first 4 . }}<span class="{{ $accentClasses.chip }}">#{{ . }}</span>{{ end }}
+    </div>
+  {{ end }}
+</article>
