@@ -4,19 +4,19 @@ sections:
   - type: featured-writing
     title: Featured Writing
     icon: article
-    limit: 5
+    limit: 2
   - type: featured-projects
     title: Featured Projects
     icon: code
-    limit: 4
+    limit: 3
   - type: experience
     title: Experience
     icon: briefcase
-    limit: 4
+    limit: 2
   - type: open-source
     title: Open Source
     icon: pull-request
-    limit: 4
+    limit: 2
   - type: books
     title: Bookshelf
     icon: book
