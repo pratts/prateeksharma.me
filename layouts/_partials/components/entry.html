@@ -27,7 +27,15 @@
     {{ if in (slice "blog") $p.Section }}<span>{{ $p.ReadingTime }} min read</span>{{ end }}
     {{ with $p.Params.status }}<span>{{ . }}</span>{{ end }}
   </div>
-  <{{ $level }} class="entry__title"><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></{{ $level }}>
+  {{/* Go's html/template escaper can't contextually handle a template
+       action as the tag name itself (`<{{ $level }}>` renders as literal,
+       escaped text instead of a real element) — so branch on a static tag
+       instead of interpolating one. */}}
+  {{ if eq $level "h3" }}
+    <h3 class="entry__title"><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h3>
+  {{ else }}
+    <h2 class="entry__title"><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h2>
+  {{ end }}
   {{ with $p.Params.description | default $p.Summary }}<p class="entry__desc">{{ . | plainify }}</p>{{ end }}
   {{ if and $showTech $tech }}<p class="entry__tech">{{ delimit $tech " · " }}</p>{{ end }}
   {{ if $showLinks }}
