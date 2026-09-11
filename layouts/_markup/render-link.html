@@ -1,3 +1,8 @@
-{{- $u := urls.Parse .Destination -}}
-{{- $external := and $u.IsAbs (ne $u.Host (urls.Parse site.BaseURL).Host) -}}
-<a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if $external }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- $dest := .Destination -}}
+{{- $external := false -}}
+{{- if or (hasPrefix $dest "http://") (hasPrefix $dest "https://") -}}
+  {{- $u := urls.Parse $dest -}}
+  {{- $site := urls.Parse site.BaseURL -}}
+  {{- $external = ne $u.Host $site.Host -}}
+{{- end -}}
+<a href="{{ $dest | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if $external }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ .Text | safeHTML }}</a>

@@ -1,32 +1,24 @@
 baseURL = "https://prateeksharma.me/"
 defaultContentLanguage = "en"
 title = "Prateek Sharma"
+enableRobotsTXT = true
+enableEmoji = true
+summaryLength = 40
 
 [languages.en]
   locale = "en-us"
   weight = 1
 
-[security]
-  [security.exec]
-    allow = ['^(dart-)?sass$', '^go$', '^git$', '^node$', '^npx$', '^postcss$', '^tailwindcss$']
-enableRobotsTXT = true
-enableGitInfo = false
-enableEmoji = true
-
-# Reading-time / summary tuning for long-form writing.
-summaryLength = 40
-
 [pagination]
-  pagerSize = 10
+  pagerSize = 20
 
 [taxonomies]
   category = "categories"
   tag = "tags"
 
 [params]
-  description = "Prateek Sharma is a software engineer focused on backend systems, distributed systems, databases, and infrastructure. Notes, projects, writing, and a bookshelf."
+  description = "Prateek Sharma — software engineer focused on backend systems, distributed systems, databases, and infrastructure. Writing, projects, open source, experience, and books."
   author = "Prateek Sharma"
-  # Used for Open Graph / Twitter cards when a page has no image of its own.
   images = ["images/profile.jpg"]
 
 [markup]
@@ -42,16 +34,6 @@ summaryLength = 40
     tabWidth = 2
     style = "github-dark"
 
-[build]
-  [build.buildStats]
-    enable = true
-  [[build.cachebusters]]
-    source = 'assets/notwatching/hugo_stats\.json'
-    target = 'css'
-  [[build.cachebusters]]
-    source = '(postcss|tailwind)\.config\.(js|mjs|ts)'
-    target = 'css'
-
 [outputs]
   home = ["HTML", "RSS", "robots"]
   section = ["HTML", "RSS"]
@@ -60,7 +42,7 @@ summaryLength = 40
 
 [services]
   [services.rss]
-    limit = 20
+    limit = 30
 
 [sitemap]
   changefreq = "weekly"
@@ -87,5 +69,6 @@ summaryLength = 40
 [permalinks]
   blog = "/blog/:contentbasename/"
   opinions = "/opinions/:contentbasename/"
+  notes = "/notes/:contentbasename/"
   projects = "/projects/:contentbasename/"
   "open-source" = "/open-source/:contentbasename/"

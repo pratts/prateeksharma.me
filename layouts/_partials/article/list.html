@@ -1,0 +1,26 @@
+{{- $section := . -}}
+{{- $descriptions := dict
+  "blog" "Long-form, structured writing on backend systems, databases, and the trade-offs behind them."
+  "opinions" "Shorter, personal takes on engineering, tooling, and building software. Some are a paragraph."
+  "notes" "Short technical fragments — the kind of thing that would otherwise live in a private notes file."
+-}}
+{{- $compact := ne $section.Section "blog" -}}
+{{- $pages := $section.Pages.ByDate.Reverse -}}
+{{- $navItem := index (where hugo.Data.navigation.main "name" "Writing") 0 -}}
+{{ partial "components/page-heading.html" (dict
+  "title" $section.Title
+  "description" ($section.Description | default (index $descriptions $section.Section))
+  "eyebrow" "Writing"
+  "navItem" $navItem
+  "current" $section.RelPermalink) }}
+<div class="page-body">
+  {{ with $section.Content }}<div class="prose" style="max-width:var(--measure-wide);padding:0 0 2rem">{{ . }}</div>{{ end }}
+  {{ if $pages }}
+    <div class="entry-list">
+      {{ range $pages }}{{ partial "components/entry.html" (dict "page" . "compact" $compact) }}{{ end }}
+    </div>
+    <p style="margin-top:2rem"><a class="home-section__more" href="{{ (printf "/%s/index.xml" $section.Section) | relURL }}">Subscribe via RSS</a></p>
+  {{ else }}
+    {{ partial "components/empty-state.html" (dict "message" "Nothing published here yet.") }}
+  {{ end }}
+</div>

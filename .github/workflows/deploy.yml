@@ -10,14 +10,12 @@ permissions:
   pages: write
   id-token: write
 
-# Allow one concurrent deployment; let in-progress runs finish.
 concurrency:
   group: pages
   cancel-in-progress: false
 
 env:
   HUGO_VERSION: 0.165.0
-  NODE_VERSION: 24
 
 jobs:
   build:
@@ -32,29 +30,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # for .GitInfo / .Lastmod
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          fetch-depth: 0
 
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
 
-      - name: Install npm dependencies
-        run: npm ci
-
       - name: Build site
         env:
           HUGO_ENVIRONMENT: production
-          HUGO_ENV: production
           TZ: Asia/Kolkata
-        run: |
-          hugo --gc --renderToMemory
-          hugo --gc --minify --baseURL "https://prateeksharma.me/"
+        run: hugo --gc --minify --baseURL "https://prateeksharma.me/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

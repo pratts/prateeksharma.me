@@ -1,0 +1,4 @@
+{{- /* Wraps its content in <pre class="mermaid">. Mermaid's JS is fetched
+from a CDN only on pages that use this shortcode — see initMermaid in
+assets/js/main.js. Plain PNG/SVG images via Markdown always work without it. */ -}}
+<pre class="mermaid">{{ .Inner | safeHTML }}</pre>

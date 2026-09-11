@@ -1,15 +1,9 @@
-{{- /* Renders category + tag links for a page. dict: "page" .  ["compact" true] */ -}}
 {{- $page := .page -}}
-{{- $compact := .compact | default false -}}
 {{- $cats := $page.Params.categories | default slice -}}
 {{- $tags := $page.Params.tags | default slice -}}
-{{- if or $cats $tags -}}
-<div class="flex flex-wrap items-center gap-2 {{ if $compact }}mt-2{{ else }}mt-4{{ end }}">
-  {{ range $cats }}
-    <a class="nerdy-cat-link" href="{{ (printf "/categories/%s/" (. | urlize)) | relURL }}">{{ . }}</a>
-  {{ end }}
-  {{ range $tags }}
-    <a class="nerdy-tag-link" href="{{ (printf "/tags/%s/" (. | urlize)) | relURL }}">#{{ . }}</a>
-  {{ end }}
+{{- if or $cats $tags }}
+<div class="tag-row">
+  {{ range $cats }}<a class="tag--category" href="{{ (printf "/categories/%s/" (. | urlize)) | relURL }}">{{ . }}</a>{{ end }}
+  {{ range $tags }}<a href="{{ (printf "/tags/%s/" (. | urlize)) | relURL }}">#{{ . }}</a>{{ end }}
 </div>
 {{- end -}}

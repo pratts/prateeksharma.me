@@ -1,0 +1,40 @@
+{{- /* Shared single-page template for blog, opinions, and notes. Front
+       matter and presentation are identical across all three; only the
+       eyebrow label and reading-time display differ by section, both
+       derived from .Section — adding a fourth writing kind (e.g. essays)
+       needs no template change, just an entry in $labels and the section
+       list in data/navigation.yaml + layouts/writing/list.html. */ -}}
+{{- $page := . -}}
+{{- $labels := dict "blog" "Blog" "opinions" "Opinion" "notes" "Note" -}}
+{{- $label := index $labels $page.Section | default (humanize $page.Section) -}}
+{{- /* Force content (and .Fragments) to render now, so components/toc.html
+       below sees populated heading data instead of running before Hugo's
+       lazy content render pass has happened. */ -}}
+{{- $content := $page.Content -}}
+
+<header class="article-header">
+  <p class="article-header__eyebrow"><a href="{{ (printf "/%s/" $page.Section) | relURL }}">{{ $label }}</a></p>
+  <h1>{{ $page.Title }}</h1>
+  {{ with $page.Description }}<p class="article-header__desc">{{ . }}</p>{{ end }}
+  <div class="article-header__meta">
+    {{ if not $page.Date.IsZero }}<time datetime="{{ $page.Date.Format "2006-01-02" }}">{{ $page.Date.Format "January 2, 2006" }}</time>{{ end }}
+    {{ if eq $page.Section "blog" }}<span>{{ $page.ReadingTime }} min read</span>{{ end }}
+  </div>
+  {{ partial "components/taxonomy-links.html" (dict "page" $page) }}
+</header>
+
+{{ with $page.Resources.GetMatch "{cover,hero}.{png,jpg,jpeg,webp}" }}
+  {{ $img := .Resize "1400x webp q85" }}
+  <div class="article-cover">
+    <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt="{{ $page.Title }}" loading="eager">
+  </div>
+{{ end }}
+
+{{ partial "components/toc.html" $page }}
+
+<div class="article-body">
+  {{ $content }}
+</div>
+
+{{ partial "components/article-nav.html" $page }}
+{{ partial "components/related.html" $page }}

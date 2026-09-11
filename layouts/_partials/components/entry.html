@@ -1,0 +1,42 @@
+{{- /* Generic editorial list row. Reused for writing, projects, open-source,
+       and taxonomy term groups so there is one visual idea for "a list of
+       content", not a card component per section.
+
+       dict:
+         page      — required, the *Page
+         kind      — optional label shown before the date (e.g. "Blog", "PR")
+         compact   — smaller title, used for opinions/notes
+         showTech  — show .Params.tech / .tags as a mono line
+         showLinks — show .Params.code / .Params.live / .Params.link
+         level     — heading tag for the title, "h2" (default) or "h3".
+                     Use "h3" when the entry sits under a visible h2 (e.g. a
+                     homepage section) so heading levels never skip.
+    */ -}}
+{{- $p := .page -}}
+{{- $kind := .kind -}}
+{{- $compact := .compact | default false -}}
+{{- $showTech := .showTech | default false -}}
+{{- $showLinks := .showLinks | default false -}}
+{{- $level := .level | default "h2" -}}
+{{- $tech := $p.Params.tech | default $p.Params.tags | default slice -}}
+
+<article class="entry{{ if $compact }} entry--compact{{ end }}">
+  <div class="entry__meta">
+    {{ with $kind }}<span class="entry__kind">{{ . }}</span>{{ end }}
+    {{ if not $p.Date.IsZero }}<time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "Jan 2, 2006" }}</time>{{ end }}
+    {{ if in (slice "blog") $p.Section }}<span>{{ $p.ReadingTime }} min read</span>{{ end }}
+    {{ with $p.Params.status }}<span>{{ . }}</span>{{ end }}
+  </div>
+  <{{ $level }} class="entry__title"><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></{{ $level }}>
+  {{ with $p.Params.description | default $p.Summary }}<p class="entry__desc">{{ . | plainify }}</p>{{ end }}
+  {{ if and $showTech $tech }}<p class="entry__tech">{{ delimit $tech " · " }}</p>{{ end }}
+  {{ if $showLinks }}
+    {{ if or $p.Params.code $p.Params.live $p.Params.link }}
+      <p class="entry__links">
+        {{ with $p.Params.code }}<a href="{{ . }}" target="_blank" rel="noopener noreferrer">Code →</a>{{ end }}
+        {{ with $p.Params.live }}<a href="{{ . }}" target="_blank" rel="noopener noreferrer">Live →</a>{{ end }}
+        {{ with $p.Params.link }}<a href="{{ . }}" target="_blank" rel="noopener noreferrer">View →</a>{{ end }}
+      </p>
+    {{ end }}
+  {{ end }}
+</article>

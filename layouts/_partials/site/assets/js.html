@@ -1,3 +1,4 @@
+{{/* js.Build uses Hugo's embedded esbuild — no Node/npm involved. */}}
 {{ with resources.Get "js/main.js" }}
   {{ $opts := dict "minify" (not hugo.IsDevelopment) }}
   {{ with . | js.Build $opts }}
@@ -5,7 +6,7 @@
       <script src="{{ .RelPermalink }}" defer></script>
     {{ else }}
       {{ with . | fingerprint }}
-        <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous" defer></script>
+        <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
       {{ end }}
     {{ end }}
   {{ end }}

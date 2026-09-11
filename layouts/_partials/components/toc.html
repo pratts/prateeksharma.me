@@ -1,0 +1,50 @@
+{{- /* A plain <details> contents box — no floating widget, no scroll-spy.
+
+Hugo synthesizes an implicit wrapping root heading when a page's body has
+content before its first real heading (true for almost every post here,
+since the title is rendered separately from `.Content`). That wrapper's
+title is empty, so unwrap one level whenever there is exactly one top-level
+entry with no usable title. */ -}}
+{{- $page := . -}}
+{{- $pageTitle := $page.Title | plainify | lower -}}
+{{- $roots := $page.Fragments.Headings -}}
+{{- if eq (len $roots) 1 -}}
+  {{- $only := index $roots 0 -}}
+  {{- $onlyTitle := $only.Title | plainify -}}
+  {{- if or (not $onlyTitle) (eq ($onlyTitle | lower) $pageTitle) -}}
+    {{- $roots = $only.Headings -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $items := slice -}}
+{{- range $roots -}}
+  {{- $title := .Title | plainify -}}
+  {{- if and $title (ne ($title | lower) $pageTitle) -}}
+    {{- $items = $items | append (dict "id" .ID "title" $title "children" .Headings) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if ge (len $items) 3 }}
+<div class="toc">
+  <details>
+    <summary>Contents</summary>
+    <ol>
+      {{ range $items }}
+        <li>
+          <a href="#{{ .id }}">{{ .title }}</a>
+          {{ with .children }}
+            <ol>
+              {{ range . }}
+                {{ $childTitle := .Title | plainify }}
+                {{ if and $childTitle (ne ($childTitle | lower) $pageTitle) }}
+                  <li><a href="#{{ .ID }}">{{ $childTitle }}</a></li>
+                {{ end }}
+              {{ end }}
+            </ol>
+          {{ end }}
+        </li>
+      {{ end }}
+    </ol>
+  </details>
+</div>
+{{ end }}

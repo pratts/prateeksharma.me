@@ -1,32 +1,33 @@
 {{ define "main" }}
   {{ $reviewed := where (where site.RegularPages "Section" "books") "Params.review" true }}
-  <div class="mx-auto max-w-3xl">
-    {{ partial "components/page-heading.html" (dict "title" (.Title | default "Book Reviews") "description" (.Description | default "Books I have written something substantial about.") "eyebrow" "~/books/reviews" "accent" "amber") }}
-    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-8 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
-
+  {{ $navItem := index (where hugo.Data.navigation.main "name" "Books") 0 }}
+  {{ partial "components/page-heading.html" (dict
+    "title" (.Title | default "Book Reviews")
+    "description" (.Description | default "Books I have written something substantial about.")
+    "eyebrow" "Books"
+    "navItem" $navItem
+    "current" .RelPermalink) }}
+  <div class="page-body">
+    {{ with .Content }}<div class="prose" style="max-width:var(--measure-wide);padding:0 0 2rem">{{ . }}</div>{{ end }}
     {{ if $reviewed }}
-      <div class="grid gap-4">
+      <div class="review-list">
         {{ range (sort $reviewed "Params.finished" "desc") }}
           {{ $cover := .Resources.GetMatch "cover.{jpg,jpeg,png,webp}" }}
-          <a class="group relative flex gap-4 nerdy-card nerdy-card-hover nerdy-card-accent-amber p-4" href="{{ .RelPermalink }}">
-            <div class="h-24 w-16 shrink-0 overflow-hidden rounded border border-slate-300/70 bg-surface-muted dark:border-slate-700/80">
-              {{ with $cover }}{{ $img := .Fill "128x192 Center webp q80" }}<img src="{{ $img.RelPermalink }}" width="128" height="192" alt="" class="h-full w-full object-cover" loading="lazy">{{ end }}
+          <a class="review-row" href="{{ .RelPermalink }}">
+            <div class="review-row__cover">
+              {{ with $cover }}{{ $img := .Fill "112x168 Center webp q80" }}<img src="{{ $img.RelPermalink }}" width="112" height="168" alt="" loading="lazy">{{ end }}
             </div>
-            <div class="min-w-0">
-              <h2 class="text-base font-semibold nerdy-card-title nerdy-title-accent-amber">{{ .Title }}</h2>
-              {{ with .Params.author }}<p class="text-xs nerdy-muted-soft">{{ . }}</p>{{ end }}
-              {{ with .Params.rating }}<p class="mt-1 font-mono text-xs text-accent-amber">{{ $r := int . }}{{ range seq $r }}★{{ end }} {{ $r }}/5</p>{{ end }}
-              {{ with .Summary }}<p class="mt-1 line-clamp-2 text-sm leading-6 nerdy-muted">{{ . | plainify }}</p>{{ end }}
+            <div>
+              <h2 class="entry__title" style="font-size:1.0625rem">{{ .Title }}</h2>
+              {{ with .Params.author }}<p class="book__author">{{ . }}</p>{{ end }}
+              {{ with .Params.rating }}{{ $r := int . }}<p class="book__rating">{{ range seq $r }}★{{ end }}</p>{{ end }}
+              {{ with .Summary }}<p class="entry__desc">{{ . | plainify }}</p>{{ end }}
             </div>
           </a>
         {{ end }}
       </div>
     {{ else }}
-      {{ partial "components/empty-state.html" (dict "parts" (slice
-        (dict "text" "No reviews yet. Set ")
-        (dict "type" "code" "text" "review: true")
-        (dict "text" " in a book's front matter and write the review in its body.")
-      )) }}
+      {{ partial "components/empty-state.html" (dict "parts" (slice (dict "text" "No reviews yet. Set ") (dict "type" "code" "text" "review: true") (dict "text" " on a book and write the review in its body."))) }}
     {{ end }}
   </div>
 {{ end }}

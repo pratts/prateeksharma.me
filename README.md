@@ -1,172 +1,195 @@
-# prateeksharma.me
+# prateeksharma.me — editorial redesign
 
-Source for [prateeksharma.me](https://prateeksharma.me/) — a personal engineering
-knowledge hub: who I am, where I have worked, what I have built, what I contribute
-to open source, what I write, what I think about, and what I read.
+Source for [prateeksharma.me](https://prateeksharma.me/), on the
+`editorial-redesign` branch: a minimal, typography-first personal engineering
+site. Content is unchanged from the previous (Nerdy-based) design, preserved on
+the `nerdy-redesign` branch — this branch replaces the presentation layer
+entirely.
 
-Built with **Hugo** + **Tailwind CSS v4** + a little **Alpine.js**. The visual
-language is adapted from the [Nerdy](https://github.com/hugo-themes/nerdy) Hugo
-theme (MIT) — see [Architecture](#architecture) for what was kept and what was
-rebuilt.
+Inspiration: the editorial, writing-first restraint of `arnav.tech` combined
+with the breadth of an engineer's personal knowledge base (projects, writing,
+open source, books) in the spirit of `arpitbhayani.me`. Neither site's content,
+layout, or markup was copied — see [Design philosophy](#design-philosophy).
 
----
+## Branches
+
+```text
+main                 — whatever is currently live
+nerdy-redesign       — the previous Nerdy-based design (preserved, frozen)
+editorial-redesign   — this branch
+```
+
+To compare the two designs locally, `git worktree add ../nerdy-preview
+nerdy-redesign` and run `hugo server` in each checkout on different ports, or
+just `git switch` between them and re-run `hugo server`.
 
 ## Quick start
 
 ```bash
-nvm use            # Node 24 (see .nvmrc)
-npm install        # Tailwind CLI + Alpine + typography plugin
-npm run dev        # Hugo dev server with drafts + future posts, at http://localhost:1313
+hugo server
 ```
 
-Other scripts:
+That's it. **No Node, no npm, no build tool.** Hugo's own asset pipeline
+(`resources.Get`, `minify`, `fingerprint`, and `js.Build` — which uses Hugo
+Extended's embedded esbuild) handles the one CSS file and one JS file this site
+ships. You need **Hugo extended ≥ 0.165**.
 
-| Command          | What it does                                                            |
-| ---------------- | --------------------------------------------------------------------- |
-| `npm run dev`    | Dev server, includes `draft`/`future` content, live reload.          |
-| `npm run serve`  | Dev server, **production** content only (no drafts).                 |
-| `npm run build`  | Production build to `public/` (two-pass, minified). Used by CI.      |
-| `npm run clean`  | Remove `public/`, `resources/`, and the Hugo build lock.            |
+```bash
+hugo server              # dev server with live reload, http://localhost:1313
+hugo server -D           # include draft content
+hugo --gc --minify       # production build to public/
+```
 
-You need **Hugo extended ≥ 0.165** and **Node ≥ 24** installed. Hugo's built-in
-Tailwind integration shells out to the `@tailwindcss/cli` binary from
-`node_modules`, so `npm install` must run before any Hugo build.
+## Design philosophy
 
-### Why the two-pass build
+Typography and whitespace carry the visual identity — not components. Concretely:
 
-`npm run build` runs Hugo twice:
+- **One reading measure.** Prose maxes out at `40rem`; listings and chrome at
+  `46rem`. Single column throughout — no sidebar, no dashboard grid.
+- **Two typefaces, both system fonts.** A serif stack (`Georgia, "Iowan Old
+  Style", ...`) for headings and titles; a system sans stack for UI text and
+  body copy. Zero font files are downloaded.
+- **One accent colour** (a muted terracotta in light mode, warm amber in dark),
+  used only for links and hover states — not a four-colour accent system.
+- **Hairline borders, not cards.** Lists (`entry-list`) separate items with a
+  1px top border, not boxes with shadows.
+- **No icons.** Public links, nav, and metadata are plain text.
+- **No JavaScript-driven components.** The mobile menu is a native `<details>`;
+  dark mode defaults to `prefers-color-scheme` and is only *overridable* via
+  JS. Code-copy buttons and the Mermaid loader are the only JS-dependent
+  affordances, and both are strictly additive — nothing breaks without them.
 
-1. `hugo --gc --renderToMemory` — produces `hugo_stats.json` (a list of every CSS
-   class Hugo emitted) without writing HTML.
-2. `hugo --gc --minify` — the real build; Tailwind now sees `hugo_stats.json` and
-   only ships the classes actually used.
-
-`build.buildStats.enable` in `hugo.toml` turns on step 1's output.
-
----
+This is a deliberate contrast with `nerdy-redesign` (Tailwind, Alpine.js, a
+terminal, a profile sidebar, a four-accent card system) — see `git diff
+nerdy-redesign editorial-redesign --stat` for the scope of the change.
 
 ## Architecture
-
-### Hugo, not a JS framework
-
-Everything is static Hugo + Markdown + data files. The only JavaScript is
-`assets/js/main.js` (~11 KB): the theme toggle, the interactive terminal,
-table-of-contents highlighting, and code-block copy buttons. Navigation, content,
-and every section work with JS disabled.
-
-### Nerdy as a local design system, not a theme dependency
-
-Nerdy is a strongly opinionated theme built around a single `posts/` surface. This
-site needed a different information architecture (six first-class content types
-plus cross-cutting taxonomy), so rather than fighting the theme with dozens of
-brittle overrides or vendoring it as a Hugo Module (which drags in the Go
-toolchain and a `hugo mod npm pack` workspace), **Nerdy's design layer was copied
-into the project and its layout layer was rebuilt**:
-
-- **Kept, close to upstream:** `assets/css/main.css` (the `nerdy-*` component
-  classes and colour tokens), `assets/js/main.js`, `assets/js/theme-scheme.js`,
-  `assets/icons/*`, and small components (`icon`, `accent-classes`,
-  `page-heading`, `section-heading`, `empty-state`, `theme-toggle`). Site-specific
-  CSS is appended to `main.css` in one clearly-marked block so the upstream part
-  stays diffable.
-- **Rebuilt for this site:** `baseof`, the homepage, every section/single layout,
-  the data-driven nested navigation, taxonomy pages, and the terminal's
-  command registry.
-
-There is **no `themes/` directory, no Hugo Module, and no `public/` submodule.**
-Everything lives in this one repo.
-
-### Directory layout
 
 ```text
 .
 ├── archetypes/            # `hugo new` templates, one per content type
 ├── assets/
-│   ├── css/main.css        # Nerdy design system + appended site CSS
-│   ├── js/                 # main.js (Alpine, terminal, toc, copy), theme-scheme.js
-│   ├── icons/              # SVG icons referenced by name
-│   └── images/profile.jpg  # profile photo — replace this file to change it
+│   ├── css/editorial.css   # the entire design system, one file
+│   ├── js/
+│   │   ├── theme-init.js    # tiny, inlined, blocking — no theme flash
+│   │   └── main.js          # theme toggle, code-copy, mermaid loader
+│   └── images/profile.jpg   # profile photo — replace this file to change it
 ├── content/
-│   ├── _index.md           # homepage intro copy
-│   ├── about.md            # /about/
-│   ├── resume.md           # /resume/
-│   ├── experience/         # one page bundle per company
-│   ├── projects/           # one page bundle per project
-│   ├── open-source/         # one file per contribution
-│   ├── blog/               # one page bundle per post
-│   ├── opinions/            # one file per opinion
+│   ├── about.md  resume.md
+│   ├── writing/_index.md   # hub page — reads data/navigation.yaml's
+│   │                       #   Writing > children to list Blog+Opinions+Notes
+│   ├── blog/  opinions/  notes/     # each a flat Hugo section
+│   ├── projects/           # page bundles, one per project
+│   ├── open-source/        # one file per contribution
+│   ├── experience/         # page bundles, one per company
 │   └── books/
 │       ├── <slug>/index.md  # one page bundle per book (+ cover.jpg)
-│       ├── reviews/         # /books/reviews/  (layout: reviews)
-│       └── reading-list/    # /books/reading-list/  (layout: reading-list)
+│       ├── reviews/          # /books/reviews/   (layout: reviews)
+│       └── reading-list/     # /books/reading-list/  (layout: reading-list)
 ├── data/
-│   ├── profile.yaml        # name, title, photo, links, stats, stack
-│   ├── navigation.yaml     # nested main nav + footer link groups
-│   ├── home.yaml           # homepage section order + limits
-│   └── terminal.yaml       # terminal config + command registry
+│   ├── profile.yaml        # name, title, photo, intro, links
+│   └── navigation.yaml     # nested nav model (see below)
 ├── layouts/
 │   ├── baseof.html  index.html  page.html  section.html
 │   ├── taxonomy.html  term.html
-│   ├── <section>/section.html + <section>/page.html   # per content type
-│   ├── books/reviews.html  books/reading-list.html
-│   ├── _markup/            # Markdown render hooks (images → <figure>, external links)
-│   └── _partials/          # site chrome, cards, home sections, terminal
-├── static/CNAME            # prateeksharma.me
+│   ├── _partials/
+│   │   ├── article/{page,list}.html   # shared blog+opinions+notes templates
+│   │   ├── components/                # entry, book, toc, related, ...
+│   │   └── site/                      # head, header, footer, seo, assets
+│   ├── _markup/            # Markdown render hooks (images → figure, links)
+│   ├── _shortcodes/mermaid.html
+│   └── <section>/{section,page}.html  # projects, experience, open-source, books
+├── static/CNAME
 ├── .github/workflows/deploy.yml
 └── hugo.toml
 ```
+
+### Why no Node this time
+
+The previous design used Tailwind CSS (via `@tailwindcss/cli`) and Alpine.js,
+which meant `npm install`, a two-pass build to generate `hugo_stats.json` for
+Tailwind's content scanning, and a `security.exec.allow` entry so Hugo could
+shell out to the Tailwind binary. An editorial, mostly-static design doesn't
+need a utility-class framework or a reactive component library — hand-written
+CSS is a few hundred lines here, and the JS is four small, independent
+enhancements. Dropping Node removes an entire toolchain and its failure modes
+for a personal site that changes rarely.
+
+### Extensible navigation and content model
+
+`data/navigation.yaml`'s `main` list is what the header renders — flat, by
+design (see the philosophy above: no dropdown menus). Each entry may also carry
+`children`, which the **hub pages** (`/writing/`, `/books/`) read directly to
+know which sections/filters to pull from:
+
+```yaml
+- name: Writing
+  url: /writing/
+  children:
+    - { name: Blog, url: /blog/, section: blog }
+    - { name: Opinions, url: /opinions/, section: opinions }
+    - { name: Notes, url: /notes/, section: notes }
+```
+
+Adding a fourth writing kind (say, Essays) is: create `content/essays/`, add
+`layouts/essays/section.html` and `page.html` that each delegate to
+`_partials/article/list.html` / `article/page.html` (copy the three lines from
+`layouts/blog/*.html`), add one entry under `children` here, and add it to the
+`$sectionOrder` list in `layouts/term.html` if you want it to show up in
+tag/category aggregation. No other template changes.
 
 ### URL structure
 
 ```text
 /                         /categories/            /tags/
-/about/                   /categories/<name>/     /tags/<name>/
-/experience/              /experience/<company>/
-/projects/                /projects/<project>/
-/open-source/             /open-source/<slug>/
-/blog/                    /blog/<post>/
-/opinions/                /opinions/<slug>/
-/books/                   /books/<book>/
-/books/reviews/           /books/reading-list/
-/resume/
+/writing/                 /categories/<name>/     /tags/<name>/
+/blog/  /blog/<post>/
+/opinions/  /opinions/<slug>/
+/notes/  /notes/<slug>/
+/projects/  /projects/<project>/
+/open-source/  /open-source/<slug>/
+/experience/  /experience/<company>/
+/books/  /books/<book>/  /books/reviews/  /books/reading-list/
+/about/  /resume/
 ```
-
-Leaf URLs use the file/bundle name (`permalinks` in `hugo.toml` pin
-`:contentbasename`), so renaming a file changes only that one URL. Old
-`pratts.github.io` URLs are **not** preserved — content architecture was the
-priority.
-
----
 
 ## Editing content
 
-All content types share the same taxonomy: **`categories`** (broad — Backend,
-Distributed Systems, Databases, Infrastructure, Programming, Systems, Engineering,
-Career, Books) and **`tags`** (specific — Go, PostgreSQL, Redis, Kubernetes,
-Temporal, API, concurrency, system-design, …). A tag or category page aggregates
-matching blog posts, opinions, projects, books, experience, and open-source
-entries — that's the "knowledge graph."
+Categories (broad) and tags (specific) are shared by every content type, so a
+tag/category page aggregates blog, opinions, notes, projects, open-source, and
+books.
 
-### Add a blog post
+### Add a blog post / opinion / note
 
 ```bash
-hugo new blog/my-post/index.md      # page bundle — lets you add images alongside
+hugo new blog/my-post/index.md        # page bundle, for images
+hugo new opinions/my-take.md          # single file
+hugo new notes/some-fact.md           # single file
 ```
 
-Edit the front matter (`description`, `categories`, `tags`), set `draft = false`,
-write the body. `##` / `###` headings feed the floating table of contents. Drop
-`cover.jpg` or `hero.jpg` in the folder for a hero image. Optional
-`related = ['/projects/x/', '/books/y/']` adds explicit "related" links (taxonomy
-matches are added automatically).
+All three share one archetype pattern and one template
+(`_partials/article/*.html`) — only the eyebrow label and reading-time display
+differ, both derived from the section. `##`/`###` headings feed a collapsible
+Contents box once a post has three or more. Drop `cover.jpg` or `hero.jpg` in a
+blog post's bundle for a hero image.
 
-### Add an opinion
+### Add an image or a diagram
 
-```bash
-hugo new opinions/my-take.md
+Page bundles: put the image file next to `index.md` and reference it with plain
+Markdown — a render hook wraps it in `<figure>` (with a caption if the image has
+a Markdown title) and generates a resized WebP. For a diagram-as-code, use the
+Mermaid shortcode:
+
+```text
+{{</* mermaid */>}}
+graph TD
+  A[Client] --> B[API] --> C[(Postgres)]
+{{</* /mermaid */>}}
 ```
 
-A single file (no bundle needed). One or two paragraphs is fine — the listing is
-built for short posts.
+Mermaid's JS is fetched from a CDN only on pages that actually use the
+shortcode (see `initMermaid` in `assets/js/main.js`) — every other page pays
+nothing for it. Static PNG/SVG/JPEG diagrams always work with no JavaScript.
 
 ### Add a project
 
@@ -174,9 +197,9 @@ built for short posts.
 hugo new projects/my-project/index.md
 ```
 
-Key front matter: `code` (repo URL), `live` (demo URL), `featured` (true → shows
-on the homepage), `status`, `tech = [...]`. Add `architecture.png` / `diagram.png`
-/ `flow.png` for the architecture figure and `screenshot-*.png` for the gallery.
+`code` / `live` URLs, `featured: true` to surface it on the homepage, `tech =
+[...]`. Add `architecture.png` / `diagram.png` / `flow.png` for the hero figure
+and `screenshot-*.png` for a gallery.
 
 ### Add an open-source contribution
 
@@ -184,9 +207,9 @@ on the homepage), `status`, `tech = [...]`. Add `architecture.png` / `diagram.pn
 hugo new open-source/what-i-did.md
 ```
 
-Set `contribution_type` to one of `pr`, `issue`, `bug`, `discussion`, `docs`,
-`other`; `project = 'owner/repo'`; `link` = the PR/issue URL; `status`. This log
-is maintained by hand — it is **not** a GitHub API sync.
+`contribution_type` is one of `pr`, `issue`, `bug`, `discussion`, `docs`,
+`other`; `project = 'owner/repo'`; `link` is the PR/issue URL. This is a
+hand-maintained log, not a GitHub API sync.
 
 ### Add experience
 
@@ -194,115 +217,65 @@ is maintained by hand — it is **not** a GitHub API sync.
 hugo new experience/company-name/index.md
 ```
 
-One bundle per **company** (not per title — cover role progression in the body).
-`date` is the start date and drives ordering; `start` / `end` are the display
-strings. Use body headings like `## Engineering areas` → `### <area>` →
-bullet points, then `## Stack`. Keep proprietary detail out; don't invent metrics.
+One bundle per **company** — cover role progression in the body, not as
+separate entries. `date` is the start date (drives ordering); `start`/`end` are
+the display strings.
 
-### Add a book
+### Add a book / review
 
 ```bash
 hugo new books/the-book-title/index.md
 ```
 
-Front matter: `author`, `status` (`want-to-read` | `reading` | `read` | `paused` |
-`abandoned`), optional `rating` (1–5), `started` / `finished`, `priority`
-(reading-list ordering), `link`, `note`. Drop `cover.jpg` in the folder — without
-one, a text placeholder renders. `want-to-read` books appear on
-`/books/reading-list/` automatically.
-
-### Add a book review
-
-In an existing book's `index.md`, set `review = true` and write the review in the
-body (a paragraph is valid; or use headings like *What I liked*, *Key ideas*,
-*Notes*). It then appears on `/books/reviews/`.
-
----
+`status` (`want-to-read` | `reading` | `read` | `paused` | `abandoned`),
+optional `rating` (1–5), `started`/`finished`, `priority` (reading-list order).
+Drop `cover.jpg` in the bundle — without one, a text placeholder renders. Set
+`review: true` and write the review in the body to have it appear on
+`/books/reviews/` (a paragraph is a valid review).
 
 ## Configuration
 
-### Navigation — `data/navigation.yaml`
-
-`main` is a list of `{ name, url }`. Add `children: [...]` for a dropdown
-(accessible: CSS hover/focus on desktop, native `<details>` on mobile — no JS
-required). Nest as deep as you like; add sections without touching a template.
-`footer` is a list of `{ title, items: [...] }` link groups.
-
-### Profile & homepage identity — `data/profile.yaml`
-
-Name, title, `tagline`, `intro`, `status`, `links` (each `{ icon, label, url }`
-where `icon` is a file in `assets/icons/`), `stats` (`{ label, value, accent }` —
-keep these truthful, no vanity metrics), and `stack` (the curated homepage list).
-
-### Homepage sections — `data/home.yaml`
-
-`sections` is an ordered list of `{ type, title, icon, limit }`. `type` maps to
-`layouts/_partials/home/sections/<type>.html`. Reorder, retitle, or drop sections
-here. Featured projects come from `featured: true`; the rest are "most recent N".
-
-### Terminal — `data/terminal.yaml`
-
-`config` (prompt, window title, `auto_command`, `builtins`), the text blocks
-(`whoami`, `about`, `interests`, `contact`, `stack`), and `commands` — a registry
-of `{ name, description, weight, quick, section, page }`. A command with
-`section:` lists that content section's recent pages; `quick: true` pins it to the
-quick-command bar. Rendering logic is in
-`layouts/_partials/terminal/render.html`; built-ins (`clear`, `cat`, `pwd`,
-`date`, `echo`, `sudo`) are in `assets/js/main.js`.
-
-### Images
-
-- **Profile photo:** replace `assets/images/profile.jpg` (roughly square, ≥ 320 px).
-  Hugo generates the responsive/OG variants. No template change needed.
-- **Content images:** put them in the page bundle and reference them with plain
-  Markdown — a render hook wraps them in `<figure>` (with `<figcaption>` if the
-  image has a title) and generates a resized WebP.
-- **Résumé PDF:** currently links to Google Drive (see `content/resume.md`). To
-  self-host, drop `static/resume.pdf` and change the link to `/resume.pdf`.
-
----
+- **`data/navigation.yaml`** — header (`main`, flat) and footer (`footer`,
+  grouped) links; also the source of truth `/writing/` and `/books/` hub pages
+  read for their sub-navigation and section lists.
+- **`data/profile.yaml`** — name, title, tagline, `intro` (the homepage
+  paragraph), `currently`, and `links` (plain `{label, url}` pairs, rendered as
+  text, not icon buttons).
+- **Profile photo** — replace `assets/images/profile.jpg` (roughly square).
+  Hugo generates the resized/OG variants; no template change needed.
+- **Résumé** — `content/resume.md` currently links to the existing Google Drive
+  PDF. To self-host, drop `static/resume.pdf` and update the link.
 
 ## Deployment
 
-Push to `main` → GitHub Actions builds and deploys to GitHub Pages
-(`.github/workflows/deploy.yml`): install Hugo extended, `npm ci`, two-pass Hugo
-build, `upload-pages-artifact`, `deploy-pages`. No generated output is committed;
-there is no `public/` submodule.
+`.github/workflows/deploy.yml` triggers on push to `main`: install Hugo
+extended, `hugo --gc --minify`, upload the Pages artifact, deploy. No Node step,
+no generated output committed, no `public/` submodule. `static/CNAME` pins the
+custom domain; `baseURL` is `https://prateeksharma.me/`, used everywhere
+(canonical links, sitemap, RSS, Open Graph).
 
-**One-time GitHub setup:**
+**This branch does not deploy anything by itself** — the workflow only fires on
+`main`. Merge `editorial-redesign` into `main` (after comparing it against
+`nerdy-redesign` and deciding) to go live.
 
-1. Repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-2. **Settings → Pages → Custom domain:** `prateeksharma.me` (the `static/CNAME`
-   file keeps it set on every deploy). Point DNS at GitHub Pages
-   (`A`/`AAAA` to the Pages IPs, or `CNAME` for `www`).
-3. Enable **Enforce HTTPS** once the certificate is issued.
+**One-time GitHub setup** (if not already done): Settings → Pages → Build and
+deployment → Source: **GitHub Actions**; Settings → Pages → Custom domain:
+`prateeksharma.me`; enable Enforce HTTPS once the certificate issues.
 
-`baseURL` is `https://prateeksharma.me/` — canonical links, sitemap, RSS, and
-Open Graph URLs all use it, never the `*.github.io` host.
+## SEO / accessibility
 
-### Migrating off the old workflow
+Canonical URLs, per-page title/description, Open Graph + Twitter cards,
+JSON-LD (`Person` on the homepage, `BlogPosting` on blog/opinions/notes),
+`sitemap.xml`, `robots.txt`, RSS for the home page, every section, and every
+taxonomy term. Semantic landmarks, a skip link, visible focus rings, a
+correct (non-skipping) heading hierarchy, alt text on every image, keyboard-
+and no-JS-navigable menus, and `prefers-reduced-motion` handling.
 
-The previous setup committed generated HTML into `pratts/pratts.github.io` and
-tracked it as a `public/` submodule in the source repo. That is gone. The old
-`pratts.github.io` repo can be kept for a while as a redirect/legacy holder but is
-no longer part of development. This repo is the single source of truth.
+## What's still a TODO
 
----
-
-## SEO / web
-
-Configured: canonical URLs, per-page `<title>`/description, Open Graph + Twitter
-cards, JSON-LD (`Person` on the homepage, `BlogPosting` on posts/opinions),
-`sitemap.xml`, `robots.txt`, and RSS for the home page, every section, and every
-taxonomy term (`/blog/index.xml`, `/tags/go/index.xml`, …).
-
-## Accessibility
-
-Semantic landmarks, a skip link, visible focus rings, keyboard-navigable menus
-(no JS-only navigation), `prefers-reduced-motion` handling, alt text on images,
-and a light/dark theme that redefines tokens rather than inverting colours.
-
-## Credits
-
-Design language, terminal concept, and CSS component system adapted from
-[Nerdy](https://github.com/hugo-themes/nerdy) by Emruz Hossain, MIT licensed.
+- **Books** are a starter reading list (all `want-to-read`) — replace with your
+  actual shelf, add `cover.jpg` files, write reviews as you finish books.
+- **Open Source** has one real entry (the OpenVoice patch). Add your actual
+  PRs/issues on other repos.
+- Run `hugo server` and eyeball light/dark + mobile (375/768px) before merging
+  to `main`.

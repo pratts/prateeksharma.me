@@ -2,9 +2,9 @@
 title = '{{ replace .File.ContentBaseName "-" " " | title }}'
 company = '{{ replace .File.ContentBaseName "-" " " | title }}'
 role = ''
-date = {{ .Date }}          # start date — used for ordering
+date = {{ .Date }}          # start date — drives ordering
 start = ''                  # e.g. 'May 2022'
-end = 'Present'             # e.g. 'Mar 2025'
+end = 'Present'
 location = ''
 draft = true
 description = ''

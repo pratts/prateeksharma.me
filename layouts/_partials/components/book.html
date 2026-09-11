@@ -1,0 +1,18 @@
+{{- $p := . -}}
+{{- $cover := $p.Resources.GetMatch "cover.{jpg,jpeg,png,webp}" -}}
+<a class="book" href="{{ $p.RelPermalink }}">
+  <div class="book__cover">
+    {{- with $cover -}}
+      {{- $img := .Fill "220x330 Center webp q85" -}}
+      <img src="{{ $img.RelPermalink }}" width="220" height="330" alt="Cover of {{ $p.Title }}" loading="lazy" decoding="async">
+    {{- else -}}
+      <span class="book__cover-fallback">{{ $p.Title }}</span>
+    {{- end -}}
+  </div>
+  <div class="book__title">{{ $p.Title }}</div>
+  {{ with $p.Params.author }}<div class="book__author">{{ . }}</div>{{ end }}
+  {{ with $p.Params.rating }}
+    {{ $r := int . }}
+    <div class="book__rating">{{ range seq $r }}★{{ end }}{{ if lt $r 5 }}{{ range seq (sub 5 $r) }}☆{{ end }}{{ end }}</div>
+  {{ end }}
+</a>

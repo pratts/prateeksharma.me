@@ -1,22 +1,35 @@
-# Data-driven navigation. Add items or nested `children` here — no template changes needed.
-# `url` may be an internal path (starts with /) or an external URL.
-# A top-level item with `children` renders as an accessible disclosure menu.
+# Data-driven navigation.
+#
+# The header renders only the top-level `main` entries (flat, by design — see
+# README). `children` still exists on entries so the model supports nesting:
+#
+#   - Writing's hub (layouts/writing/section.html) reads each child's
+#     `section` to pull that Hugo section's pages generically — adding a
+#     fourth writing kind is a data change plus one new content section, not
+#     a template change.
+#   - Books' subnav (layouts/books/*.html) only reads each child's
+#     `name`/`url` to render the Bookshelf/Reviews link row; the bookshelf's
+#     own grouping logic (by `status`) and the reviews filter (`review:
+#     true`) are bespoke to books and live in the templates themselves.
 main:
-  - name: About
-    url: /about/
-  - name: Experience
-    url: /experience/
+  - name: Writing
+    url: /writing/
+    children:
+      - name: Blog
+        url: /blog/
+        section: blog
+      - name: Opinions
+        url: /opinions/
+        section: opinions
+      - name: Notes
+        url: /notes/
+        section: notes
   - name: Projects
     url: /projects/
   - name: Open Source
     url: /open-source/
-  - name: Writing
-    url: /blog/
-    children:
-      - name: Blog
-        url: /blog/
-      - name: Opinions
-        url: /opinions/
+  - name: Experience
+    url: /experience/
   - name: Books
     url: /books/
     children:
@@ -24,29 +37,30 @@ main:
         url: /books/
       - name: Reviews
         url: /books/reviews/
-      - name: Reading List
-        url: /books/reading-list/
-  - name: Tags
-    url: /tags/
+  - name: About
+    url: /about/
 
-# Footer link groups.
 footer:
-  - title: Site
-    items:
-      - name: About
-        url: /about/
-      - name: Experience
-        url: /experience/
-      - name: Projects
-        url: /projects/
-      - name: Open Source
-        url: /open-source/
   - title: Writing
     items:
       - name: Blog
         url: /blog/
       - name: Opinions
         url: /opinions/
+      - name: Notes
+        url: /notes/
+  - title: Work
+    items:
+      - name: Projects
+        url: /projects/
+      - name: Open Source
+        url: /open-source/
+      - name: Experience
+        url: /experience/
+  - title: Index
+    items:
+      - name: Books
+        url: /books/
       - name: Categories
         url: /categories/
       - name: Tags

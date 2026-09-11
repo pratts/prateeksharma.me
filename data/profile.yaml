@@ -1,72 +1,32 @@
-# Identity shown in the homepage sidebar and used for SEO/JSON-LD.
-# Edit this file to change your name, title, photo, links, stats, and stack.
+# Identity shown at the top of the homepage and used for SEO/JSON-LD.
+# Replace assets/images/profile.jpg to change the photo — no template edits needed.
 name: Prateek Sharma
-title: Backend & Systems Engineer
-# Photo lives in assets/images/ so Hugo can generate responsive sizes.
-# Replace assets/images/profile.jpg with your own file to change it — no template edits needed.
+title: Software Engineer
 photo: images/profile.jpg
-tagline: >-
-  Software engineer with 10+ years building backend and distributed systems where
-  correctness, reliability, and scale matter.
+
+# One line, set in type under the name.
+tagline: "Backend & distributed systems. Databases, infrastructure, APIs."
+
+# Short homepage introduction — a paragraph, not a biography. The fuller
+# story is on /about/.
 intro: >-
-  I work on backend services, databases, and infrastructure — API design, data
-  modelling, workflow orchestration, and the observability to keep it all honest.
-  My background spans fintech and crypto, B2B SaaS, and real-money real-time
-  gaming. I write here about the systems I build and the decisions behind them.
+  I build backend systems and infrastructure where correctness, reliability, and
+  scale matter — APIs, data models, workflow orchestration, and the observability
+  to keep it honest. Ten-plus years across fintech and crypto, B2B SaaS, and
+  real-money real-time gaming. I write here about the systems I build and the
+  decisions behind them.
 
-status:
-  label: Status
-  value: Open to engineering roles
-  preference_label: Focus
-  preference: Backend / Distributed Systems
+currently: "Currently exploring Go and systems internals."
 
-# Public links. Order is preserved. `icon` maps to assets/icons/<icon>.svg.
+# Public links — rendered as a plain text row, not icon buttons.
 links:
-  - icon: github
-    label: github.com/pratts
+  - label: GitHub
     url: https://github.com/pratts
-  - icon: linkedin
-    label: linkedin.com/in/prateeksharma28
+  - label: LinkedIn
     url: https://www.linkedin.com/in/prateeksharma28/
-  - icon: mail
-    label: prateeksharma.2801@gmail.com
+  - label: Email
     url: mailto:prateeksharma.2801@gmail.com
-  - icon: document
-    label: Résumé (PDF)
+  - label: Résumé
     url: /resume/
-  - icon: stack-overflow
-    label: Stack Exchange
+  - label: Stack Exchange
     url: https://stackexchange.com/users/3052399/prateek
-
-# Small set of meaningful stats. Keep these truthful and useful.
-stats:
-  - label: Experience
-    value: 10+ years
-    accent: emerald
-  - label: Focus
-    value: Backend & Systems
-    accent: cyan
-  - label: Domains
-    value: Fintech · SaaS · Gaming
-    accent: purple
-  - label: Languages
-    value: Go · TS · Python · Java
-    accent: amber
-  - label: Exploring
-    value: Go · systems internals
-    accent: cyan
-
-# Curated stack for the homepage. The full history lives in /about/ and /experience/.
-stack:
-  - Go
-  - TypeScript
-  - Python
-  - Java
-  - Node.js / NestJS
-  - PostgreSQL
-  - Redis
-  - Temporal
-  - AWS
-  - Docker
-  - Kubernetes
-  - OpenTelemetry

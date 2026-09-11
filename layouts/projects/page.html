@@ -1,71 +1,52 @@
 {{ define "main" }}
   {{ $page := . }}
   {{ $tech := .Params.tech | default .Params.tags | default slice }}
-  <article class="mx-auto max-w-3xl">
-    <header class="mb-8 border-b border-slate-300/70 pb-6 dark:border-slate-700">
-      <div class="mb-3 flex flex-wrap items-center gap-1 font-mono text-xs nerdy-muted-soft">
-        <a class="text-accent-cyan hover:underline" href="{{ "/projects/" | relURL }}">~/projects</a>
-        <span>/</span>
-        <span class="text-accent-amber">{{ .File.ContentBaseName }}</span>
-      </div>
-      <div class="flex flex-wrap items-center gap-3">
-        <h1 class="text-2xl font-bold tracking-tight text-slate-950 dark:text-white md:text-4xl">{{ .Title }}</h1>
-        {{ with .Params.status }}<span class="nerdy-chip nerdy-chip-cyan uppercase">{{ . }}</span>{{ end }}
-      </div>
-      {{ with .Params.description }}<p class="mt-3 max-w-2xl text-sm leading-6 nerdy-muted">{{ . }}</p>{{ end }}
-
-      {{ if or .Params.code .Params.live }}
-        <div class="mt-5 flex flex-wrap gap-3">
-          {{ with .Params.code }}
-            <a class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white/90 px-3.5 py-2 text-sm font-medium text-slate-800 transition-colors hover:border-accent-cyan/40 hover:text-slate-950 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200" href="{{ . }}" target="_blank" rel="noopener noreferrer">
-              {{ partial "components/icon.html" (dict "name" "github" "class" "h-4 w-4") }}<span>Code</span>
-            </a>
-          {{ end }}
-          {{ with .Params.live }}
-            <a class="inline-flex items-center gap-2 rounded-lg border border-accent-cyan/40 bg-accent-cyan/10 px-3.5 py-2 text-sm font-medium text-accent-cyan transition-colors hover:bg-accent-cyan/20" href="{{ . }}" target="_blank" rel="noopener noreferrer">
-              {{ partial "components/icon.html" (dict "name" "external" "class" "h-4 w-4") }}<span>Live</span>
-            </a>
-          {{ end }}
-        </div>
-      {{ end }}
-
-      <div class="mt-5 grid gap-2 font-mono text-xs nerdy-muted sm:grid-cols-2">
-        {{ with $tech }}<div><span class="text-accent-cyan">tech</span> = [{{ delimit . ", " }}]</div>{{ end }}
-        {{ with .Params.dates }}<div><span class="text-accent-cyan">dates</span> = {{ . }}</div>{{ end }}
-        {{ with .Params.role }}<div><span class="text-accent-cyan">role</span> = {{ . }}</div>{{ end }}
-      </div>
-      {{ partial "components/taxonomy-links.html" (dict "page" .) }}
-    </header>
-
-    {{ with .Resources.GetMatch "{architecture,diagram,flow}.{png,jpg,jpeg,webp,svg}" }}
-      <figure class="nerdy-prose mb-8">
-        {{ if eq .MediaType.SubType "svg" }}
-          <img src="{{ .RelPermalink }}" alt="{{ $page.Title }} architecture">
-        {{ else }}
-          {{ $img := .Resize "1600x webp q85" }}
-          <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt="{{ $page.Title }} architecture" loading="lazy">
-        {{ end }}
-        <figcaption>Architecture</figcaption>
-      </figure>
-    {{ end }}
-
-    <div class="nerdy-prose prose prose-slate max-w-none dark:prose-invert">
-      {{ .Content }}
+  {{ $content := .Content }}
+  <header class="article-header">
+    <p class="article-header__eyebrow"><a href="{{ "/projects/" | relURL }}">Project</a></p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.description }}<p class="article-header__desc">{{ . }}</p>{{ end }}
+    <div class="article-header__meta">
+      {{ with .Params.status }}<span>{{ . }}</span>{{ end }}
+      {{ with .Params.dates }}<span>{{ . }}</span>{{ end }}
     </div>
-
-    {{ $shots := .Resources.Match "screenshot*.{png,jpg,jpeg,webp}" }}
-    {{ with $shots }}
-      <section class="nerdy-divider">
-        <h2 class="mb-4 font-mono text-xs font-bold uppercase tracking-widest nerdy-muted-soft">screenshots</h2>
-        <div class="grid gap-4 sm:grid-cols-2">
-          {{ range . }}
-            {{ $img := .Resize "900x webp q82" }}
-            <a href="{{ .RelPermalink }}" target="_blank" rel="noopener"><img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt="{{ $page.Title }} screenshot" class="w-full rounded-xl border border-slate-300/70 dark:border-slate-700/80" loading="lazy"></a>
-          {{ end }}
-        </div>
-      </section>
+    {{ with $tech }}<p class="entry__tech" style="margin-top:0.9rem">{{ delimit . " · " }}</p>{{ end }}
+    {{ if or .Params.code .Params.live }}
+      <p class="entry__links" style="margin-top:0.7rem">
+        {{ with .Params.code }}<a href="{{ . }}" target="_blank" rel="noopener noreferrer">Code →</a>{{ end }}
+        {{ with .Params.live }}<a href="{{ . }}" target="_blank" rel="noopener noreferrer">Live →</a>{{ end }}
+      </p>
     {{ end }}
+    {{ partial "components/taxonomy-links.html" (dict "page" .) }}
+  </header>
 
-    {{ partial "components/related.html" . }}
-  </article>
+  {{ with .Resources.GetMatch "{architecture,diagram,flow}.{png,jpg,jpeg,webp,svg}" }}
+    <div class="article-cover">
+      {{ if eq .MediaType.SubType "svg" }}
+        <img src="{{ .RelPermalink }}" alt="{{ $page.Title }} architecture">
+      {{ else }}
+        {{ $img := .Resize "1400x webp q85" }}
+        <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt="{{ $page.Title }} architecture" loading="lazy">
+      {{ end }}
+    </div>
+  {{ end }}
+
+  {{ partial "components/toc.html" . }}
+
+  <div class="article-body">
+    {{ $content }}
+  </div>
+
+  {{ with .Resources.Match "screenshot*.{png,jpg,jpeg,webp}" }}
+    <div class="article-body" style="margin-top:2.5rem">
+      <div style="display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+        {{ range . }}
+          {{ $img := .Resize "900x webp q82" }}
+          <a href="{{ .RelPermalink }}" target="_blank" rel="noopener"><img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt="{{ $page.Title }} screenshot" style="border:1px solid var(--border);border-radius:4px" loading="lazy"></a>
+        {{ end }}
+      </div>
+    </div>
+  {{ end }}
+
+  {{ partial "components/related.html" . }}
 {{ end }}

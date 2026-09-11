@@ -8,6 +8,5 @@ tags = ['Go']
 # related = ['/projects/some-project/']
 +++
 
-Write the post here. Drop `cover.jpg` or `hero.jpg` next to this file (use a page
-bundle: `hugo new blog/my-post/index.md`) for a hero image. `##` / `###` headings
-drive the floating table of contents.
+Write the post here. Drop `cover.jpg` next to this file for a hero image.
+`##` / `###` headings populate the Contents box once there are three or more.

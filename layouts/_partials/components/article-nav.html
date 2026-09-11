@@ -1,0 +1,13 @@
+{{- $page := . -}}
+{{- $prev := $page.PrevInSection -}}
+{{- $next := $page.NextInSection -}}
+{{- if or $prev $next }}
+<nav class="article-nav" aria-label="Post navigation">
+  {{ with $next }}
+    <a href="{{ .RelPermalink }}"><span class="article-nav__dir">← Older</span>{{ .Title }}</a>
+  {{ else }}<span></span>{{ end }}
+  {{ with $prev }}
+    <a class="article-nav__next" href="{{ .RelPermalink }}"><span class="article-nav__dir">Newer →</span>{{ .Title }}</a>
+  {{ end }}
+</nav>
+{{- end -}}

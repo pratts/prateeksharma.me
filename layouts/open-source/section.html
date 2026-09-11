@@ -1,27 +1,21 @@
 {{ define "main" }}
   {{ $pages := .Pages.ByDate.Reverse }}
   {{ $byType := $pages.GroupByParam "contribution_type" }}
-  <div class="mx-auto max-w-3xl">
-    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Contributions to projects maintained by other people — pull requests, issues, bug reports, and docs. Distinct from my own projects.") "eyebrow" "~/open-source" "accent" "purple") }}
-    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-8 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
-
+  {{ partial "components/page-heading.html" (dict
+    "title" .Title
+    "description" (.Description | default "Contributions to projects maintained by other people — not my own projects, and maintained by hand rather than synced from GitHub.")
+    "eyebrow" "Index") }}
+  <div class="page-body">
+    {{ with .Content }}<div class="prose" style="max-width:var(--measure-wide);padding:0 0 2rem">{{ . }}</div>{{ end }}
     {{ if $pages }}
-      <div class="mb-6 flex flex-wrap gap-2 font-mono text-xs">
-        {{ range $byType }}
-          <span class="rounded border border-slate-300/70 bg-slate-100/80 px-2.5 py-1 nerdy-muted dark:border-slate-700/80 dark:bg-slate-800/70">{{ .Key | default "other" | humanize }}: {{ len .Pages }}</span>
-        {{ end }}
+      <div class="type-badges">
+        {{ range $byType }}<span>{{ .Key | default "other" | humanize }} · {{ len .Pages }}</span>{{ end }}
       </div>
-      <div class="nerdy-card px-5 py-2 sm:px-6">
-        {{ range $pages }}{{ partial "cards/contribution-row.html" . }}{{ end }}
+      <div class="entry-list">
+        {{ range $pages }}{{ partial "components/entry.html" (dict "page" . "kind" (.Params.contribution_type | default "contribution") "showLinks" true) }}{{ end }}
       </div>
     {{ else }}
-      {{ partial "components/empty-state.html" (dict "parts" (slice
-        (dict "text" "No contributions logged yet. Add Markdown files under ")
-        (dict "type" "code" "text" "content/open-source/")
-        (dict "text" " with a " )
-        (dict "type" "code" "text" "contribution_type")
-        (dict "text" " of pr, issue, bug, discussion, or docs.")
-      )) }}
+      {{ partial "components/empty-state.html" (dict "parts" (slice (dict "text" "No contributions logged yet. Add Markdown files under ") (dict "type" "code" "text" "content/open-source/") (dict "text" "."))) }}
     {{ end }}
   </div>
 {{ end }}

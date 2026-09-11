@@ -1,0 +1,35 @@
+{{ define "main" }}
+  {{/* Reads its own entry's `children` from data/navigation.yaml — adding a
+       fourth writing kind (e.g. Essays) means adding a content section, a
+       section/page.html + section/section.html pair reusing article/*, and
+       one line here: no changes to this template. */}}
+  {{ $navItem := index (where hugo.Data.navigation.main "name" "Writing") 0 }}
+
+  {{ partial "components/page-heading.html" (dict
+    "title" (.Title | default "Writing")
+    "description" (.Description | default "Everything I publish, newest first — blog posts, opinions, and notes together.")
+    "eyebrow" "Writing"
+    "navItem" $navItem
+    "current" .RelPermalink) }}
+
+  <div class="page-body">
+    {{ with .Content }}<div class="prose" style="max-width:var(--measure-wide);padding:0 0 2rem">{{ . }}</div>{{ end }}
+
+    {{ $items := slice }}
+    {{ range $navItem.children }}
+      {{ $child := . }}
+      {{ range (where site.RegularPages "Section" $child.section) }}
+        {{ $items = $items | append (dict "page" . "kind" $child.name "date" .Date) }}
+      {{ end }}
+    {{ end }}
+    {{ $items = sort $items "date" "desc" }}
+
+    {{ if $items }}
+      <div class="entry-list">
+        {{ range $items }}{{ partial "components/entry.html" (dict "page" .page "kind" .kind "compact" (ne .kind "Blog")) }}{{ end }}
+      </div>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "message" "Nothing published yet.") }}
+    {{ end }}
+  </div>
+{{ end }}

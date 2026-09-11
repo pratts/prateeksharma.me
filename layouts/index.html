@@ -1,32 +1,124 @@
 {{ define "main" }}
-  {{ $sections := hugo.Data.home.sections | default slice }}
-  <div class="nerdy-page-surface nerdy-page-surface--home">
-    <div class="nerdy-ambient-bg"></div>
-    <div class="nerdy-top-glow"></div>
+  {{ $p := hugo.Data.profile }}
 
-    <div class="nerdy-container pt-10 lg:pt-14">
-      <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-12">
-        {{ partial "home/sidebar.html" . }}
-
-        <div class="flex flex-col gap-8 lg:col-span-8">
-          {{ with .Content }}
-            <div class="nerdy-prose prose prose-slate max-w-none text-sm dark:prose-invert">
-              {{ . }}
-            </div>
-          {{ end }}
-
-          {{ partial "terminal.html" . }}
-
-          {{ range $sections }}
-            {{ $partial := printf "home/sections/%s.html" .type }}
-            {{ if templates.Exists (printf "_partials/%s" $partial) }}
-              {{ partial $partial . }}
-            {{ else }}
-              {{ errorf "Unknown home section type %q (expected layouts/_partials/%s)" .type $partial }}
-            {{ end }}
-          {{ end }}
-        </div>
-      </div>
+  <section class="hero">
+    {{ with resources.Get $p.photo }}
+      {{ $img := .Fill "152x152 Center webp q88" }}
+      <img class="hero__photo" src="{{ $img.RelPermalink }}" width="76" height="76" alt="{{ $p.name }}" loading="eager" decoding="async" fetchpriority="high">
+    {{ end }}
+    <div>
+      <h1 class="hero__name">{{ $p.name }}</h1>
+      <p class="hero__tagline">{{ $p.tagline }}</p>
     </div>
+  </section>
+
+  {{ with $p.intro }}<p class="hero__intro">{{ . }}</p>{{ end }}
+  {{ with $p.currently }}<p class="hero__currently">{{ . }}</p>{{ end }}
+
+  <div class="hero__links">
+    {{ range $p.links }}<a href="{{ .url }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener noreferrer me"{{ end }}>{{ .label }}</a>{{ end }}
   </div>
+
+  {{/* --- Writing: most recent blog + opinions + notes, mixed and dated --- */}}
+  {{ $writingKinds := slice
+    (dict "section" "blog" "label" "Blog")
+    (dict "section" "opinions" "label" "Opinion")
+    (dict "section" "notes" "label" "Note")
+  }}
+  {{ $writing := slice }}
+  {{ range $writingKinds }}
+    {{ $k := . }}
+    {{ range (where site.RegularPages "Section" $k.section) }}
+      {{ $writing = $writing | append (dict "page" . "kind" $k.label "date" .Date) }}
+    {{ end }}
+  {{ end }}
+  {{ $writing = sort $writing "date" "desc" }}
+  <section class="home-section" id="writing">
+    <div class="home-section__head">
+      <h2>Writing</h2>
+      <a class="home-section__more" href="/writing/">All writing →</a>
+    </div>
+    {{ if $writing }}
+      <div class="entry-list">
+        {{ range first 5 $writing }}{{ partial "components/entry.html" (dict "page" .page "kind" .kind "compact" true "level" "h3") }}{{ end }}
+      </div>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "message" "Nothing published yet.") }}
+    {{ end }}
+  </section>
+
+  {{/* --- Projects: featured, falling back to most recent --- */}}
+  {{ $projects := where (where site.RegularPages "Section" "projects") "Params.featured" true }}
+  {{ $projects = $projects.ByWeight }}
+  {{ if lt (len $projects) 1 }}{{ $projects = (where site.RegularPages "Section" "projects").ByDate.Reverse }}{{ end }}
+  <section class="home-section" id="projects">
+    <div class="home-section__head">
+      <h2>Projects</h2>
+      <a class="home-section__more" href="/projects/">All projects →</a>
+    </div>
+    {{ if $projects }}
+      <div class="entry-list">
+        {{ range first 4 $projects }}{{ partial "components/entry.html" (dict "page" . "showTech" true "showLinks" true "level" "h3") }}{{ end }}
+      </div>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "parts" (slice (dict "text" "No projects yet. Add page bundles under ") (dict "type" "code" "text" "content/projects/") (dict "text" " with ") (dict "type" "code" "text" "featured: true") (dict "text" "."))) }}
+    {{ end }}
+  </section>
+
+  {{/* --- Open Source --- */}}
+  {{ $osItems := first 3 (where site.RegularPages "Section" "open-source").ByDate.Reverse }}
+  <section class="home-section" id="open-source">
+    <div class="home-section__head">
+      <h2>Open Source</h2>
+      <a class="home-section__more" href="/open-source/">All contributions →</a>
+    </div>
+    {{ if $osItems }}
+      <div class="entry-list">
+        {{ range $osItems }}{{ partial "components/entry.html" (dict "page" . "kind" (.Params.contribution_type | default "contribution") "showLinks" true "level" "h3") }}{{ end }}
+      </div>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "message" "No contributions logged yet.") }}
+    {{ end }}
+  </section>
+
+  {{/* --- Experience --- */}}
+  {{ $exp := first 4 (where site.RegularPages "Section" "experience").ByDate.Reverse }}
+  <section class="home-section" id="experience">
+    <div class="home-section__head">
+      <h2>Experience</h2>
+      <a class="home-section__more" href="/experience/">Full experience →</a>
+    </div>
+    {{ if $exp }}
+      <div class="entry-list">
+        {{ range $exp }}
+          <article class="entry entry--compact">
+            <div class="entry__meta"><span>{{ .Params.start }} — {{ .Params.end | default "Present" }}</span></div>
+            <h3 class="entry__title"><a href="{{ .RelPermalink }}">{{ .Params.company | default .Title }}</a></h3>
+            <p class="entry__desc">{{ .Params.role }}</p>
+          </article>
+        {{ end }}
+      </div>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "message" "No experience entries yet.") }}
+    {{ end }}
+  </section>
+
+  {{/* --- Books --- */}}
+  {{ $books := where site.RegularPages "Section" "books" }}
+  {{ $shelf := where $books "Params.status" "reading" }}
+  {{ $shelf = $shelf | append (where $books "Params.status" "read").ByDate.Reverse }}
+  {{ if lt (len $shelf) 1 }}{{ $shelf = sort $books "Params.priority" "asc" }}{{ end }}
+  <section class="home-section" id="books">
+    <div class="home-section__head">
+      <h2>Books</h2>
+      <a class="home-section__more" href="/books/">Bookshelf →</a>
+    </div>
+    {{ if $shelf }}
+      <div class="book-grid">
+        {{ range first 6 $shelf }}{{ partial "components/book.html" . }}{{ end }}
+      </div>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "message" "No books yet.") }}
+    {{ end }}
+  </section>
 {{ end }}

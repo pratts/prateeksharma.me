@@ -1,0 +1,12 @@
+{{- /* Renders a nav entry's `children` (from data/navigation.yaml) as a text
+       sub-nav row. Used on hub pages (Writing, Books) so adding a child
+       there is a data change only. */ -}}
+{{- $navItem := .navItem -}}
+{{- $current := .current -}}
+{{- with $navItem.children -}}
+  <nav class="subnav" aria-label="Sections">
+    {{ range . }}
+      <a href="{{ .url }}"{{ if eq $current .url }} aria-current="page"{{ end }}>{{ .name }}</a>
+    {{ end }}
+  </nav>
+{{- end -}}

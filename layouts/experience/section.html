@@ -1,36 +1,27 @@
 {{ define "main" }}
   {{ $pages := .Pages.ByDate.Reverse }}
-  <div class="mx-auto max-w-3xl">
-    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Ten-plus years across fintech and crypto, B2B SaaS, and real-time gaming — the engineering, not the résumé.") "eyebrow" "~/experience" "accent" "emerald") }}
-    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-10 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
-
+  {{ partial "components/page-heading.html" (dict
+    "title" .Title
+    "description" (.Description | default "Ten-plus years across fintech and crypto, B2B SaaS, and real-time gaming — the engineering, not a resume dump.")
+    "eyebrow" "Index") }}
+  <div class="page-body">
+    {{ with .Content }}<div class="prose" style="max-width:var(--measure-wide);padding:0 0 2rem">{{ . }}</div>{{ end }}
     {{ if $pages }}
-      <div class="nerdy-timeline">
-        {{ range $i, $p := $pages }}
-          <article class="relative">
-            <span class="nerdy-timeline-dot {{ if eq $i 0 }}nerdy-timeline-dot--live{{ end }}"></span>
-            <a class="group block" href="{{ $p.RelPermalink }}">
-              <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <h2 class="text-lg font-bold text-slate-950 transition-colors group-hover:text-accent-emerald dark:text-white">{{ $p.Params.company | default $p.Title }}</h2>
-                <span class="font-mono text-xs nerdy-muted-soft">{{ $p.Params.start }} — {{ $p.Params.end | default "Present" }}</span>
-              </div>
-              <p class="mt-0.5 font-mono text-sm text-accent-cyan">{{ $p.Params.role }}{{ with $p.Params.location }} · <span class="nerdy-muted-soft">{{ . }}</span>{{ end }}</p>
-              {{ with $p.Params.description | default $p.Summary }}<p class="mt-2 text-sm leading-6 nerdy-muted">{{ . | plainify }}</p>{{ end }}
-              {{ with $p.Params.tags }}
-                <div class="mt-3 flex flex-wrap gap-2">
-                  {{ range first 8 . }}<span class="rounded-full border border-slate-300/70 bg-slate-100/80 px-2.5 py-1 font-mono text-[11px] leading-none text-slate-600 dark:border-slate-700/80 dark:bg-slate-800/70 dark:text-slate-400">{{ . }}</span>{{ end }}
-                </div>
-              {{ end }}
-            </a>
+      <div class="timeline">
+        {{ range $pages }}
+          <article class="timeline-entry">
+            <div class="timeline-entry__head">
+              <h2 class="timeline-entry__company"><a href="{{ .RelPermalink }}">{{ .Params.company | default .Title }}</a></h2>
+              <span class="timeline-entry__dates">{{ .Params.start }} — {{ .Params.end | default "Present" }}</span>
+            </div>
+            <p class="timeline-entry__role">{{ .Params.role }}{{ with .Params.location }} · {{ . }}{{ end }}</p>
+            {{ with .Params.description | default .Summary }}<p class="timeline-entry__desc">{{ . | plainify }}</p>{{ end }}
           </article>
         {{ end }}
       </div>
     {{ else }}
       {{ partial "components/empty-state.html" (dict "message" "No experience entries yet.") }}
     {{ end }}
-
-    <p class="mt-10 font-mono text-xs nerdy-muted-soft">
-      Prefer the one-pager? <a class="nerdy-link" href="{{ "/resume/" | relURL }}">Résumé →</a>
-    </p>
+    <p style="margin-top:2rem"><a class="home-section__more" href="{{ "/resume/" | relURL }}">Prefer the one-pager? Résumé →</a></p>
   </div>
 {{ end }}
