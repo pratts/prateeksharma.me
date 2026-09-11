@@ -1,25 +1,21 @@
 # Homepage section order and limits. Reorder or drop entries in `sections`.
 # Each entry maps to a partial in layouts/_partials/home/sections/<type>.html.
 sections:
+  - type: featured-writing
+    title: Featured Writing
+    icon: article
+    limit: 5
   - type: featured-projects
     title: Featured Projects
     icon: code
-    limit: 4
-  - type: open-source
-    title: Open Source
-    icon: pull-request
     limit: 4
   - type: experience
     title: Experience
     icon: briefcase
     limit: 4
-  - type: recent-blog
-    title: Recent Blog Posts
-    icon: article
-    limit: 4
-  - type: recent-opinions
-    title: Recent Opinions
-    icon: chat
+  - type: open-source
+    title: Open Source
+    icon: pull-request
     limit: 4
   - type: books
     title: Bookshelf
