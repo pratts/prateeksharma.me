@@ -3,7 +3,7 @@ title: Goroomlib
 date: 2026-08-23
 draft: false
 featured: true
-description: "A thread-safe Go library providing a reusable Room–User architecture for real-time systems like chat and multiplayer games."
+description: "A thread-safe Go library providing a reusable Room-User architecture for real-time systems like chat and multiplayer games."
 status: maintained
 categories: [Systems, Programming]
 tags: [Go, Concurrency, Real-time Systems, Library]
@@ -21,7 +21,7 @@ a new real-time feature, I ended up rewriting the same User and Room bookkeeping
 from scratch. I wanted to pull that pattern out once, get it right, and stop
 reimplementing it.
 
-That's how [Goroomlib](https://github.com/pratts/goroomlib) started — a small Go
+That's how [Goroomlib](https://github.com/pratts/goroomlib) started: a small Go
 library that provides a reusable Room-User architecture for anything room-shaped:
 chat apps, multiplayer games, poker tables.
 
@@ -31,8 +31,8 @@ I wanted the library to do a few things well:
    of who's in which room.
 2. Be safe to call from many goroutines at once, since real-time servers are
    inherently concurrent.
-3. Stay unopinionated about what actually happens on a join, leave, or message —
-   the library shouldn't need to know or care what a "poker table" or a "chat
+3. Stay unopinionated about what actually happens on a join, leave, or message.
+   The library shouldn't need to know or care what a "poker table" or a "chat
    room" does with that event.
 
 The first two were straightforward: a `RoomService` and `UserService`, each
@@ -42,7 +42,7 @@ backed by a map protected by a mutex. The third one needed more thought.
 
 The obvious trap with a library like this is baking in assumptions about what a
 "room" is for. I didn't want Goroomlib to know anything about poker hands or chat
-messages — just membership and message passing. So instead of hardcoding
+messages, just membership and message passing. So instead of hardcoding
 behavior, I added a `RoomExtension` hook interface that consumers implement to
 react to room-level events:
 
@@ -61,13 +61,13 @@ room := roomService.CreateRoomWithExtension("extended", 10, extension)
 ```
 
 There's a matching `AppExtension` at the top level for events that aren't scoped
-to a single room — a new user connecting, or a message aimed at the app rather
-than a room. This split let me keep the library itself dumb about domain logic
+to a single room, such as a new user connecting or a message aimed at the app
+rather than a room. This split let me keep the library itself dumb about domain logic
 while still giving callers a place to hang their own behavior.
 
 ## The concurrency problem that actually bit me
 
-The trickiest part wasn't the API — it was making sure a user's view of "which
+The trickiest part wasn't the API. It was making sure a user's view of "which
 rooms am I in" never disagreed with a room's view of "who's currently joined."
 Early on, I had `AddUserToRoom` update the room's user map and then separately
 update the user's joined-rooms list. Under concurrent calls, it was possible for
@@ -81,7 +81,7 @@ half-updated state.
 
 The other rule I had to enforce on myself: never hand out the internal maps
 directly. Accessors like `GetUserMap` and `GetJoinedRooms` return copies, not
-live references — otherwise a caller iterating over "users in this room" outside a
+live references. Otherwise a caller iterating over "users in this room" outside a
 lock could race with an `AddUserToRoom` call happening on another goroutine.
 
 ## Room names as the identity boundary
@@ -104,7 +104,7 @@ instead of silently overwriting an existing room.
 
 ## Where it's landed
 
-Goroomlib is intentionally small — it doesn't try to be a full game server
+Goroomlib is intentionally small. It doesn't try to be a full game server
 framework, just the membership and messaging primitives that real-time,
 room-based systems all seem to need. That's also what makes it easy to drop into
 a new project: initialize the services, wire up an extension if you need

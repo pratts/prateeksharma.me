@@ -133,9 +133,9 @@ Everything lives in this one repo.
 /books/reviews/           /books/reading-list/
 ```
 
-There is deliberately no `/resume/` page — every "Résumé" link (sidebar, footer,
-terminal `contact`, About, Experience) opens the actual résumé URL directly in a
-new tab. See **Résumé** under Configuration below.
+There is deliberately no `/resume/` page — every "Resume" link (sidebar, footer,
+terminal `contact`, About, Experience) opens the actual resume URL directly in a
+new tab. See **Resume** under Configuration below.
 
 Leaf URLs use the file/bundle name (`permalinks` in `hugo.toml` pin
 `:contentbasename`), so renaming a file changes only that one URL. Old
@@ -282,9 +282,9 @@ quick-command bar. Rendering logic is in
 - **Content images:** put them in the page bundle and reference them with plain
   Markdown — a render hook wraps them in `<figure>` (with `<figcaption>` if the
   image has a title) and generates a resized WebP.
-### Résumé
+### Resume
 
-There is no `/resume/` page — "Résumé" links go straight to the actual URL and
+There is no `/resume/` page — "Resume" links go straight to the actual URL and
 open in a new tab (`target="_blank"`), rather than hopping through a page on
 this site first. The same URL currently appears in five places, each with a
 short comment pointing back here:

@@ -1,5 +1,5 @@
 ---
-title: Adda52 — Delta Corp
+title: Adda52 (Delta Corp)
 company: Adda52.com (Delta Corp Ltd)
 role: Graduate Trainee → Senior Software Engineer
 date: 2014-09-01
@@ -34,7 +34,7 @@ across the game backend, load and resilience testing, and the public platform.
 
 - Enhanced Java-based user-behaviour simulators to **load test real-time poker
   servers at 10,000+ concurrent users**.
-- Built **disaster-recovery systems** for zero-downtime gameplay — restoring
+- Built **disaster-recovery systems** for zero-downtime gameplay, restoring
   poker games and player state after a failure.
 
 ### Platform migration

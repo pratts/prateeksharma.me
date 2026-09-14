@@ -23,13 +23,13 @@ open-sourced it once it was in decent shape.
 
 ## Avoiding ~25 near-identical methods
 
-The exchange exposes close to two dozen endpoints — tickers, order book depth,
+The exchange exposes close to two dozen endpoints: tickers, order book depth,
 order placement, withdrawals, sub-account transfers, and so on. Writing a
 hand-rolled method for each one would have meant the same boilerplate repeated
 two dozen times: build params, sign if needed, pick GET/POST/DELETE, hit the URL,
 parse the response.
 
-Instead, I modeled each endpoint as data — a name mapped to its HTTP verb, path,
+Instead, I modeled each endpoint as data: a name mapped to its HTTP verb, path,
 and whether it needs signing:
 
 ```go
@@ -42,7 +42,7 @@ var endpointMap = map[string]APIDetails{
 }
 ```
 
-Every public method — `Ping`, `Depth`, `CreateOrder`, `CancelOrder` — is then a
+Every public method (`Ping`, `Depth`, `CreateOrder`, `CancelOrder`) is then a
 thin wrapper that calls into a single `call()` dispatcher, which looks up the
 endpoint, signs it if needed, and routes to the right HTTP verb handler. Adding a
 new endpoint later meant adding one line to a map and one thin wrapper method,
@@ -82,7 +82,7 @@ func (client *Client) call(ctx context.Context, name string, params map[string]a
 ```
 
 This happens inside `call()`, once, regardless of which of the ~15 signed
-endpoints is being hit — so a new signed endpoint gets correct signing for free
+endpoints is being hit, so a new signed endpoint gets correct signing for free
 just by being added to the map.
 
 ## Configuration as functional options
@@ -105,6 +105,6 @@ time I wanted one more knob.
 ## Where it's landed
 
 The library has been acknowledged by WazirX's co-founder, and I've gone back to
-add new endpoints as the exchange's API surface has grown — something the
+add new endpoints as the exchange's API surface has grown, something the
 data-driven endpoint map made easy, since most additions are just a new map entry
 and a thin wrapper.

@@ -59,7 +59,7 @@ Try <span class="font-bold text-accent-cyan">cat interests.txt</span> or a secti
 
 {{- else if $cmd.section -}}
   {{- $pages := first 8 (where site.RegularPages "Section" $cmd.section).ByDate.Reverse -}}
-  {{ $pre | safeHTML }}{{ range $pages }}<span class="text-accent-purple">></span> <a class="pointer-events-auto relative z-50 font-bold text-accent-cyan underline" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ with .Params.company }} <span class="nerdy-muted-soft">— {{ . }}{{ with $.cmd }}{{ end }}</span>{{ end }}
+  {{ $pre | safeHTML }}{{ range $pages }}<span class="text-accent-purple">></span> <a class="pointer-events-auto relative z-50 font-bold text-accent-cyan underline" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ with .Params.role }} <span class="nerdy-muted-soft">({{ . }})</span>{{ end }}
 {{ with .Description }}  <span class="nerdy-muted">{{ . | plainify | truncate 90 }}</span>
 {{ end }}{{ end }}
 See all: <a class="pointer-events-auto relative z-50 nerdy-link underline" href="{{ $cmd.page | default (printf "/%s/" $cmd.section) }}">{{ $cmd.page | default (printf "/%s/" $cmd.section) }}</a>

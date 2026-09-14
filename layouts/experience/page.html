@@ -9,7 +9,7 @@
       <h1 class="text-2xl font-bold tracking-tight text-slate-950 dark:text-white md:text-4xl">{{ .Params.company | default .Title }}</h1>
       <p class="mt-2 font-mono text-sm text-accent-cyan">{{ .Params.role }}</p>
       <div class="mt-4 nerdy-meta-row">
-        <span>{{ .Params.start }} — {{ .Params.end | default "Present" }}</span>
+        <span>{{ .Params.start }} – {{ .Params.end | default "Present" }}</span>
         {{ with .Params.location }}<span aria-hidden="true">·</span><span>{{ . }}</span>{{ end }}
       </div>
       {{ with .Params.description }}<p class="mt-4 max-w-2xl text-sm leading-6 nerdy-muted">{{ . }}</p>{{ end }}

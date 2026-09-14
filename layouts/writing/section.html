@@ -10,7 +10,7 @@
   <div class="mx-auto max-w-3xl">
     {{ partial "components/page-heading.html" (dict
       "title" (.Title | default "Writing")
-      "description" (.Description | default "Everything I publish, newest first — blog posts, opinions, and notes together.")
+      "description" (.Description | default "Everything I publish, newest first: blog posts, opinions, and notes together.")
       "eyebrow" "~/writing"
       "accent" "cyan") }}
     {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-8 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}

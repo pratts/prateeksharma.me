@@ -18,5 +18,5 @@ CREATE INDEX idx_uid_did ON notes(user_id, domain);
 A composite index is only fully useful as a left-prefix: this index serves
 `WHERE user_id = ?` and `WHERE user_id = ? AND domain = ?`, but not
 `WHERE domain = ?` alone. The rule of thumb is to order columns by how the
-queries actually filter — most selective / most-always-present first — not by
-declaration order in the table, and not alphabetically.
+queries actually filter (most selective, most-always-present column first), not
+by declaration order in the table, and not alphabetically.

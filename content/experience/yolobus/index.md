@@ -9,7 +9,7 @@ location: Gurugram, India
 draft: false
 description: "Designed the database architecture for an in-house Global Distribution System and a serverless bus-ticket booking engine."
 categories: [Backend, Databases]
-tags: [Python, Django, AWS Chalice, Serverless, GDS, REST APIs, Payments]
+tags: [Python, Django, AWS Chalice, Serverless, GDS, REST API, Payments]
 ---
 
 Yolobus operated intercity buses. I worked on the in-house systems for inventory
