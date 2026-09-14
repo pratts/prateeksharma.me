@@ -2,13 +2,15 @@
   {{ $pages := .Pages.ByDate.Reverse }}
   {{ $byType := $pages.GroupByParam "contribution_type" }}
   <div class="mx-auto max-w-3xl">
-    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Contributions to projects maintained by other people — pull requests, issues, bug reports, and docs. Distinct from my own projects.") "eyebrow" "~/open-source" "accent" "purple") }}
+    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Contributions to projects maintained by other people: pull requests, issues, bug reports, and docs. Distinct from my own projects.") "eyebrow" "~/open-source" "accent" "purple") }}
     {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-8 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
 
     {{ if $pages }}
+      {{ $typeLabels := dict "pr" "Pull Request" "issue" "Issue" "bug" "Bug Report" "discussion" "Discussion" "docs" "Documentation" "other" "Other" }}
       <div class="mb-6 flex flex-wrap gap-2 font-mono text-xs">
         {{ range $byType }}
-          <span class="rounded border border-slate-300/70 bg-slate-100/80 px-2.5 py-1 nerdy-muted dark:border-slate-700/80 dark:bg-slate-800/70">{{ .Key | default "other" | humanize }}: {{ len .Pages }}</span>
+          {{ $key := .Key | default "other" }}
+          <span class="rounded border border-slate-300/70 bg-slate-100/80 px-2.5 py-1 nerdy-muted dark:border-slate-700/80 dark:bg-slate-800/70">{{ index $typeLabels $key | default (humanize $key) }}: {{ len .Pages }}</span>
         {{ end }}
       </div>
       <div class="nerdy-card px-5 py-2 sm:px-6">

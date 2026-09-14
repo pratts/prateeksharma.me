@@ -1,7 +1,7 @@
 {{ define "main" }}
   {{ $pages := .Pages.ByDate.Reverse }}
   <div class="mx-auto max-w-3xl">
-    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Short technical fragments — the kind of thing that would otherwise live in a private notes file.") "eyebrow" "~/notes" "accent" "purple") }}
+    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Short technical fragments: the kind of thing that would otherwise live in a private notes file.") "eyebrow" "~/notes" "accent" "purple") }}
     {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-8 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
 
     {{ if $pages }}
