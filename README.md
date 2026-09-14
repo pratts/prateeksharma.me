@@ -340,6 +340,20 @@ cards, JSON-LD (`Person` on the homepage, `BlogPosting` on posts/opinions/notes)
 `/blog/index.xml`, `/opinions/index.xml`, `/notes/index.xml`), and every
 taxonomy term (`/tags/go/index.xml`, …).
 
+## Analytics
+
+[Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/) — cookieless,
+no consent banner required, reports page views (per path, so individual blog
+posts show up separately), referrers, and real-user Core Web Vitals. Configured
+in `data/analytics.yaml` (`cloudflare_token`); the beacon is only rendered in
+production builds — `hugo server` never fires it, so local dev doesn't pollute
+real traffic numbers. Clear the token to disable analytics entirely.
+
+The domain's DNS is unproxied ("DNS only" in Cloudflare, required for the
+GitHub Pages custom domain to work), so this uses Cloudflare's manual-setup
+snippet rather than edge auto-injection — that's why the beacon is in
+`layouts/_partials/site/head.html` instead of just a dashboard toggle.
+
 ## Accessibility
 
 Semantic landmarks, a skip link, visible focus rings, keyboard-navigable menus
