@@ -27,5 +27,8 @@ PRs to close that gap:
   `rawDocumentDbSize` and `avgDocumentSize` per index.
 
 Each was scoped to one issue the Meilisearch team had already filed
-(`#615`, `#614`, `#613`), so the change was mostly wiring the existing API
-fields through the SDK's response struct. All three merged.
+([#615](https://github.com/meilisearch/meilisearch-go/issues/615),
+[#614](https://github.com/meilisearch/meilisearch-go/issues/614),
+[#613](https://github.com/meilisearch/meilisearch-go/issues/613)), so the
+change was mostly wiring the existing API fields through the SDK's response
+struct. All three merged.
