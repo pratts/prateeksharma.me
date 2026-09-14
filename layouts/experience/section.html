@@ -1,7 +1,7 @@
 {{ define "main" }}
   {{ $pages := .Pages.ByDate.Reverse }}
   <div class="mx-auto max-w-3xl">
-    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Ten-plus years across fintech and crypto, B2B SaaS, and real-time gaming: the engineering, not the résumé.") "eyebrow" "~/experience" "accent" "emerald") }}
+    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Ten-plus years across fintech and crypto, B2B SaaS, and real-time gaming: the engineering, not the resume.") "eyebrow" "~/experience" "accent" "emerald") }}
     {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-10 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
 
     {{ if $pages }}
@@ -29,10 +29,10 @@
       {{ partial "components/empty-state.html" (dict "message" "No experience entries yet.") }}
     {{ end }}
 
-    {{/* Same URL as the Résumé link in data/profile.yaml — kept literal here
+    {{/* Same URL as the Resume link in data/profile.yaml — kept literal here
          rather than introducing cross-data-file lookups for one link. */}}
     <p class="mt-10 font-mono text-xs nerdy-muted-soft">
-      Prefer the one-pager? <a class="nerdy-link" href="https://drive.google.com/file/d/1K3zOHEUgZ6lBQ2ntsQGcQvtzoNFtvk4x/view?usp=sharing" target="_blank" rel="noopener noreferrer">Résumé →</a>
+      Prefer the one-pager? <a class="nerdy-link" href="https://drive.google.com/file/d/1K3zOHEUgZ6lBQ2ntsQGcQvtzoNFtvk4x/view?usp=sharing" target="_blank" rel="noopener noreferrer">Resume →</a>
     </p>
   </div>
 {{ end }}

@@ -329,7 +329,7 @@ diagnose (only if one is safe to describe without confidential detail).
 
 **Source material:** CoinTracker's agentic-development workflow.
 **Why it's worth writing:** This is explicitly a topic worth surfacing per
-your own instructions, and it differentiates you in a way a bare résumé bullet
+your own instructions, and it differentiates you in a way a bare resume bullet
 can't. There's real appetite right now for engineers describing their actual
 AI-assisted workflow rather than either dismissing or overselling it.
 **Rough outline:** 1) what kind of tasks you hand off vs. keep, 2) how review

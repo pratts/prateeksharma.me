@@ -52,4 +52,4 @@ Off-screen: books and calisthenics.
 - GitHub: [github.com/pratts](https://github.com/pratts)
 - LinkedIn: [linkedin.com/in/prateeksharma28](https://www.linkedin.com/in/prateeksharma28/)
 - Email: [prateeksharma.2801@gmail.com](mailto:prateeksharma.2801@gmail.com)
-- [Résumé](https://drive.google.com/file/d/1K3zOHEUgZ6lBQ2ntsQGcQvtzoNFtvk4x/view?usp=sharing)
+- [Resume](https://drive.google.com/file/d/1K3zOHEUgZ6lBQ2ntsQGcQvtzoNFtvk4x/view?usp=sharing)
