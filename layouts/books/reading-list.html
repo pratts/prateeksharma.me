@@ -18,11 +18,7 @@
         {{ end }}
       </ul>
     {{ else }}
-      {{ partial "components/empty-state.html" (dict "parts" (slice
-        (dict "text" "Reading list is empty. Add book bundles with ")
-        (dict "type" "code" "text" "status: want-to-read")
-        (dict "text" ".")
-      )) }}
+      {{ partial "components/empty-state.html" (dict "message" "Nothing queued up yet.") }}
     {{ end }}
   </div>
 {{ end }}

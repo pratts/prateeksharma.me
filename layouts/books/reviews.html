@@ -22,11 +22,7 @@
         {{ end }}
       </div>
     {{ else }}
-      {{ partial "components/empty-state.html" (dict "parts" (slice
-        (dict "text" "No reviews yet. Set ")
-        (dict "type" "code" "text" "review: true")
-        (dict "text" " in a book's front matter and write the review in its body.")
-      )) }}
+      {{ partial "components/empty-state.html" (dict "message" "No reviews yet.") }}
     {{ end }}
   </div>
 {{ end }}

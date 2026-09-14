@@ -15,13 +15,7 @@
         {{ range $pages }}{{ partial "cards/contribution-row.html" . }}{{ end }}
       </div>
     {{ else }}
-      {{ partial "components/empty-state.html" (dict "parts" (slice
-        (dict "text" "No contributions logged yet. Add Markdown files under ")
-        (dict "type" "code" "text" "content/open-source/")
-        (dict "text" " with a " )
-        (dict "type" "code" "text" "contribution_type")
-        (dict "text" " of pr, issue, bug, discussion, or docs.")
-      )) }}
+      {{ partial "components/empty-state.html" (dict "message" "No contributions logged yet.") }}
     {{ end }}
   </div>
 {{ end }}

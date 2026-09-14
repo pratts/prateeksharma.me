@@ -2,7 +2,7 @@
 title: "Two-sided membership needs one lock, not two"
 date: 2026-08-27
 draft: false
-description: "A bidirectional relationship — users know their rooms, rooms know their users — has to be updated under a single lock, or readers will catch it half-done."
+description: "A bidirectional relationship (users know their rooms, rooms know their users) has to be updated under a single lock, or readers will catch it half-done."
 categories: [Systems, Programming]
 tags: [Go, Concurrency, Data Structures, Real-time Systems]
 related:
@@ -11,7 +11,7 @@ related:
 
 [Goroomlib](/projects/goroomlib/) models a relationship that points both ways: a
 `Room` holds a map of its users, and each `User` holds a list of the rooms it's
-in. That redundancy is deliberate — both lookups need to be O(1) — but it's also
+in. That redundancy is deliberate (both lookups need to be O(1)), but it's also
 the whole bug surface.
 
 ## The first version
@@ -35,12 +35,12 @@ func (s *RoomService) AddUserToRoom(roomName string, user *User) {
 Each side is individually locked, so `go vet` and the race detector on a simple
 test are both happy. But there's a window between the two critical sections where
 the room says "user is here" and the user says "I'm not in that room." Anything
-that reads both — say, a disconnect handler that walks `user.joinedRooms` to
-remove the user from each — can run in that window and leak the membership.
+that reads both (say, a disconnect handler that walks `user.joinedRooms` to
+remove the user from each) can run in that window and leak the membership.
 
-Under load this stopped being theoretical. A join and a disconnect for the same
-user, on two goroutines, could interleave so the disconnect walked a
-`joinedRooms` list that didn't yet contain the room the join was about to add.
+This isn't just a theoretical race. A join and a disconnect for the same user,
+on two goroutines, can interleave so the disconnect walks a `joinedRooms` list
+that doesn't yet contain the room the join is about to add.
 
 ## The fix: one lock covering both sides
 
@@ -84,6 +84,6 @@ create a data race even if they try.
 ## Takeaway
 
 If you denormalize a relationship for lookup speed, the writes to both
-representations are a single atomic operation — lock once, update both, unlock —
-and every read of the shared structure either holds the lock or gets a copy.
+representations are a single atomic operation: lock once, update both, unlock.
+Every read of the shared structure either holds the lock or gets a copy.
 There's no "mostly consistent" version of this that survives contention.

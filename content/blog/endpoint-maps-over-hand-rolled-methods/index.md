@@ -2,17 +2,17 @@
 title: "Endpoint maps over hand-rolled methods"
 date: 2026-08-25
 draft: false
-description: "When a client library wraps ~25 near-identical HTTP endpoints, describing them as data instead of writing 25 methods pays off — with one real trade-off."
+description: "When a client library wraps ~25 near-identical HTTP endpoints, describing them as data instead of writing 25 methods pays off, with one real trade-off."
 categories: [Backend, Programming]
-tags: [Go, API, API Design, REST, HTTP]
+tags: [Go, REST API, API Design, HTTP]
 related:
   - /projects/wazirx-connector-go/
   - /opinions/generic-returns-for-a-solo-maintained-library/
 ---
 
-I've now written two client libraries for the same exchange API — one in
-[Go](/projects/wazirx-connector-go/), one in
-[Java](/projects/wazirx-connector-java/) — and the thing I'd keep from both is
+I've now written two client libraries for the same exchange API, one in
+[Go](/projects/wazirx-connector-go/) and one in
+[Java](/projects/wazirx-connector-java/), and the thing I'd keep from both is
 the same: don't write a method per endpoint. Describe the endpoints as data and
 dispatch through one function.
 
@@ -25,8 +25,8 @@ The API has roughly two dozen endpoints. They differ in four ways:
 - whether the request must be signed
 - the response body
 
-Everything else — building query params, adding a signature, choosing the verb
-handler, parsing the response — is identical. Writing a hand-rolled method per
+Everything else (building query params, adding a signature, choosing the verb
+handler, parsing the response) is identical. Writing a hand-rolled method per
 endpoint means writing that identical body 25 times, and then maintaining 25
 copies of it when the signing scheme or the base URL handling changes.
 
@@ -87,8 +87,8 @@ ticker := data.(map[string]any)
 ```
 
 That's genuinely worse to use than `client.Ticker(...) (*Ticker, error)`. I chose
-it because the API's response shapes vary a lot — objects vs. arrays, fields that
-appear and disappear — and I didn't want to chase every upstream change across 25
+it because the API's response shapes vary a lot (objects vs. arrays, fields that
+appear and disappear), and I didn't want to chase every upstream change across 25
 structs for a library I maintain alone. If this were a library with a team and a
 compatibility promise, I'd probably eat the cost of typed responses and generate
 them.

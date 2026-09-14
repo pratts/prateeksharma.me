@@ -4,7 +4,7 @@ date: 2026-08-26
 draft: false
 description: "Typed response structs are the default advice. For a one-person library wrapping a churny upstream API, `(any, error)` was the cheaper long-term choice."
 categories: [Programming, Engineering]
-tags: [Go, API Design, Libraries, Trade-offs]
+tags: [Go, API Design, Library, Trade-offs]
 related:
   - /blog/endpoint-maps-over-hand-rolled-methods/
   - /projects/wazirx-connector-go/
@@ -15,7 +15,7 @@ The standard advice for a client library is: give callers typed responses.
 in my [WazirX Go connector](/projects/wazirx-connector-go/) and I still think it
 was right *for that library*.
 
-The upstream API's response shapes move around — objects that become arrays,
+The upstream API's response shapes move around: objects that become arrays,
 fields that appear and vanish across endpoints. With ~25 endpoints and one
 maintainer (me, in spare hours), typed structs would mean 25 things to keep in
 sync with an API I don't control and can't see changes to until they ship. The

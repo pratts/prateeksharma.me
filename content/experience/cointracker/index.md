@@ -40,8 +40,9 @@ keeping wallet balances consistent across chains.
   validation, and reconciliation.
 - Used **pytest** and **mypy** to keep correctness and type safety enforced in
   CI.
-- Adopted Claude Code as an agentic assistant for feature work, debugging, and
-  issue resolution.
+- Used Claude Code as an agentic coding assistant for feature implementation,
+  debugging, and issue resolution, reviewing and validating every change
+  against the pytest/mypy suite before it shipped.
 
 ## Stack
 

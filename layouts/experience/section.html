@@ -12,7 +12,7 @@
             <a class="group block" href="{{ $p.RelPermalink }}">
               <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                 <h2 class="text-lg font-bold text-slate-950 transition-colors group-hover:text-accent-emerald dark:text-white">{{ $p.Params.company | default $p.Title }}</h2>
-                <span class="font-mono text-xs nerdy-muted-soft">{{ $p.Params.start }} — {{ $p.Params.end | default "Present" }}</span>
+                <span class="font-mono text-xs nerdy-muted-soft">{{ $p.Params.start }} – {{ $p.Params.end | default "Present" }}</span>
               </div>
               <p class="mt-0.5 font-mono text-sm text-accent-cyan">{{ $p.Params.role }}{{ with $p.Params.location }} · <span class="nerdy-muted-soft">{{ . }}</span>{{ end }}</p>
               {{ with $p.Params.description | default $p.Summary }}<p class="mt-2 text-sm leading-6 nerdy-muted">{{ . | plainify }}</p>{{ end }}

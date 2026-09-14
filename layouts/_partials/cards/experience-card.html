@@ -7,7 +7,7 @@
     <h3 class="text-lg font-bold nerdy-card-title nerdy-title-accent-emerald">
       <a href="{{ $p.RelPermalink }}" class="after:absolute after:inset-0">{{ $p.Params.company | default $p.Title }}</a>
     </h3>
-    <span class="font-mono text-xs nerdy-muted-soft">{{ $start }} — {{ $end }}</span>
+    <span class="font-mono text-xs nerdy-muted-soft">{{ $start }} – {{ $end }}</span>
   </div>
   {{ with $p.Params.role }}<p class="mt-1 font-mono text-sm text-accent-cyan">{{ . }}</p>{{ end }}
   {{ with $p.Params.description | default $p.Summary }}<p class="mt-2 line-clamp-3 text-sm leading-6 nerdy-muted">{{ . | plainify }}</p>{{ end }}

@@ -18,11 +18,11 @@ hear it read aloud, and summarize it with AI for review. It's a Chrome extension
 
 ## Architecture
 
-- **Backend (Go)** — Fiber for HTTP, PostgreSQL via GORM, JWT auth, OpenAI for
+- **Backend (Go):** Fiber for HTTP, PostgreSQL via GORM, JWT auth, OpenAI for
   summarization, deployed on Railway in a Docker container.
-- **Frontend (React + TypeScript)** — Vite build, React Query + Context for
+- **Frontend (React + TypeScript):** Vite build, React Query + Context for
   state, deployed on Vercel.
-- **Extension** — Manifest V3 service worker, Chrome Storage API for local state,
+- **Extension:** Manifest V3 service worker, Chrome Storage API for local state,
   Chrome TTS API for playback, content scripts for text selection.
 
 ## Decisions worth noting

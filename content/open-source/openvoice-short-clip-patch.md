@@ -5,7 +5,7 @@ draft: false
 contribution_type: other
 project: myshell-ai/OpenVoice
 link: https://github.com/pratts/OpenVoice
-status: "Personal fork — not submitted upstream"
+status: "Personal fork, not submitted upstream"
 description: "Relaxed the minimum-segment-length check in se_extractor.py so sub-1.5s lines can be cloned, and made the pipeline run on CPU (Apple M1)."
 categories: [Programming]
 tags: [Python, OpenVoice, TTS, Voice Cloning]

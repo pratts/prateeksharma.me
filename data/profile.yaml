@@ -8,11 +8,6 @@ photo: images/profile.jpg
 tagline: >-
   Software engineer with 10+ years building backend and distributed systems where
   correctness, reliability, and scale matter.
-intro: >-
-  I work on backend services, databases, and infrastructure — API design, data
-  modelling, workflow orchestration, and the observability to keep it all honest.
-  My background spans fintech and crypto, B2B SaaS, and real-money real-time
-  gaming. I write here about the systems I build and the decisions behind them.
 
 status:
   label: Status

@@ -4,7 +4,7 @@
 
 {{- $title := .Title | default site.Title -}}
 {{- $isHome := .IsHome -}}
-<title>{{ if $isHome }}{{ site.Title }} — {{ hugo.Data.profile.title }}{{ else }}{{ $title }} | {{ site.Title }}{{ end }}</title>
+<title>{{ if $isHome }}{{ site.Title }}: {{ hugo.Data.profile.title }}{{ else }}{{ $title }} | {{ site.Title }}{{ end }}</title>
 
 {{- $description := "" -}}
 {{- with .Description }}{{ $description = . }}{{ else }}{{ with .Summary }}{{ $description = . | plainify | truncate 200 }}{{ else }}{{ $description = site.Params.description }}{{ end }}{{ end -}}
