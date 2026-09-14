@@ -5,5 +5,3 @@ description: "Contributions to projects maintained by other people: patches, for
 
 This is work on **other people's** projects. My own open-source libraries live
 under [Projects](/projects/).
-
-This log is maintained by hand. See the repo README for how to add an entry.
