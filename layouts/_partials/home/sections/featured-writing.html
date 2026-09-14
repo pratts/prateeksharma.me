@@ -1,0 +1,29 @@
+{{- /* Mixes Blog + Opinions + Notes, newest first — the homepage shows one
+       "Featured Writing" section rather than a separate card grid per
+       writing kind, matching /writing/ itself. */ -}}
+{{- $cfg := . -}}
+{{- $limit := $cfg.limit | default 5 -}}
+{{- $sections := slice "blog" "opinions" "notes" -}}
+{{- $items := slice -}}
+{{- range $sections }}{{ range (where site.RegularPages "Section" .) }}{{ $items = $items | append . }}{{ end }}{{ end -}}
+{{- $items = first $limit (sort $items "Date" "desc") -}}
+
+<section class="mt-4" id="{{ $cfg.id | default "featured-writing" }}">
+  {{ partial "components/section-heading.html" (dict "icon" ($cfg.icon | default "article") "title" ($cfg.title | default "Featured Writing") "prefix" "<<" "suffix" ">>") }}
+  {{ if $items }}
+    <div class="nerdy-card px-5 py-2 sm:px-6">
+      {{ range $items }}{{ partial "cards/writing-row.html" (dict "page" .) }}{{ end }}
+    </div>
+    <a class="mt-4 inline-flex items-center gap-1.5 font-mono text-sm nerdy-link" href="/writing/">All writing {{ partial "components/icon.html" (dict "name" "arrow-right" "class" "h-4 w-4") }}</a>
+  {{ else }}
+    {{ partial "components/empty-state.html" (dict "parts" (slice
+      (dict "text" "No writing yet. Add page bundles under ")
+      (dict "type" "code" "text" "content/blog/")
+      (dict "text" ", ")
+      (dict "type" "code" "text" "content/opinions/")
+      (dict "text" ", or ")
+      (dict "type" "code" "text" "content/notes/")
+      (dict "text" ".")
+    )) }}
+  {{ end }}
+</section>

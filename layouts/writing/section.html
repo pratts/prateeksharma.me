@@ -1,0 +1,38 @@
+{{ define "main" }}
+  {{/* Reads its own nav entry's `children` (data/navigation.yaml) to know
+       which sections to aggregate — adding a fourth writing kind (e.g.
+       Essays) means adding a content section, a section/page.html +
+       section/section.html pair that reuse the Opinions templates, one
+       entry in writing-row.html's $kindMeta, and one line in
+       data/navigation.yaml. No changes needed here. */}}
+  {{ $navItem := index (where hugo.Data.navigation.main "name" "Writing") 0 }}
+
+  <div class="mx-auto max-w-3xl">
+    {{ partial "components/page-heading.html" (dict
+      "title" (.Title | default "Writing")
+      "description" (.Description | default "Everything I publish, newest first — blog posts, opinions, and notes together.")
+      "eyebrow" "~/writing"
+      "accent" "cyan") }}
+    {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-8 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
+
+    {{ $pages := slice }}
+    {{ range $navItem.children }}
+      {{ $section := path.Base .url }}
+      {{ range (where site.RegularPages "Section" $section) }}
+        {{ $pages = $pages | append . }}
+      {{ end }}
+    {{ end }}
+    {{ $pages = sort $pages "Date" "desc" }}
+
+    {{ if $pages }}
+      <div class="nerdy-card px-5 py-2 sm:px-6">
+        {{ range $pages }}{{ partial "cards/writing-row.html" (dict "page" .) }}{{ end }}
+      </div>
+      <p class="mt-6 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs nerdy-muted-soft">
+        {{ range $navItem.children }}<a class="nerdy-link" href="{{ .url }}">{{ .name }} →</a>{{ end }}
+      </p>
+    {{ else }}
+      {{ partial "components/empty-state.html" (dict "message" "Nothing published yet.") }}
+    {{ end }}
+  </div>
+{{ end }}

@@ -4,7 +4,7 @@
   <div class="mx-auto max-w-4xl">
     {{ partial "components/page-heading.html" (dict
       "title" .Title
-      "description" (.Description | default (printf "Every %s used across blog posts, opinions, projects, books, experience, and open-source work." $singular))
+      "description" (.Description | default (printf "Every %s used across blog posts, opinions, notes, projects, books, experience, and open-source work." $singular))
       "eyebrow" (printf "~/%s" .Data.Plural)
       "accent" (cond $isTag "cyan" "purple")) }}
 

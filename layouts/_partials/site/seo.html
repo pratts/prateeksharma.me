@@ -14,7 +14,7 @@
 <meta property="og:title" content="{{ if $page.IsHome }}{{ site.Title }}{{ else }}{{ $page.Title }}{{ end }}">
 <meta property="og:description" content="{{ $description }}">
 <meta property="og:url" content="{{ $page.Permalink }}">
-<meta property="og:type" content="{{ if or (eq $page.Section "blog") (eq $page.Section "opinions") }}article{{ else }}website{{ end }}">
+<meta property="og:type" content="{{ if in (slice "blog" "opinions" "notes") $page.Section }}article{{ else }}website{{ end }}">
 {{- with $ogImage }}
 <meta property="og:image" content="{{ . }}">
 <meta property="og:image:alt" content="{{ $page.Title | default site.Title }}">
@@ -45,7 +45,7 @@
   | jsonify (dict "indent" "  ") | safeJS
 }}
 </script>
-{{- else if or (eq $page.Section "blog") (eq $page.Section "opinions") }}
+{{- else if in (slice "blog" "opinions" "notes") $page.Section }}
 <script type="application/ld+json">
 {{ dict
   "@context" "https://schema.org"

@@ -29,8 +29,10 @@
       {{ partial "components/empty-state.html" (dict "message" "No experience entries yet.") }}
     {{ end }}
 
+    {{/* Same URL as the Résumé link in data/profile.yaml — kept literal here
+         rather than introducing cross-data-file lookups for one link. */}}
     <p class="mt-10 font-mono text-xs nerdy-muted-soft">
-      Prefer the one-pager? <a class="nerdy-link" href="{{ "/resume/" | relURL }}">Résumé →</a>
+      Prefer the one-pager? <a class="nerdy-link" href="https://drive.google.com/file/d/1K3zOHEUgZ6lBQ2ntsQGcQvtzoNFtvk4x/view?usp=sharing" target="_blank" rel="noopener noreferrer">Résumé →</a>
     </p>
   </div>
 {{ end }}

@@ -5,7 +5,7 @@ role: Tech Lead
 date: 2021-03-01
 start: "Mar 2021"
 end: "May 2022"
-location: Remote
+location: Gurugram, India
 draft: false
 description: "Led an online poker platform with advanced tournament features and an event-driven backend for thousands of concurrent players."
 categories: [Systems, Backend]

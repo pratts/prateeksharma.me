@@ -1,6 +1,17 @@
 # Data-driven navigation. Add items or nested `children` here — no template changes needed.
 # `url` may be an internal path (starts with /) or an external URL.
 # A top-level item with `children` renders as an accessible disclosure menu.
+#
+# Writing and Books are "hub" entries: their own section templates
+# (layouts/writing/section.html, layouts/books/*.html) read this entry's
+# `children` to know which content sections/views to aggregate, deriving the
+# Hugo section name from the last path segment of each child's `url`. Adding
+# a fourth writing kind later (e.g. Essays) is: a new content/essays/ section
+# with page.html/section.html copied from opinions/, one child entry here,
+# and one label in layouts/_partials/cards/writing-row.html — no rewrite of
+# the hub template itself. The same goes for a later top-level group like
+# Knowledge (Books, Papers, Courses) or nested Projects (Personal,
+# Experiments): add the group here first.
 main:
   - name: About
     url: /about/
@@ -11,12 +22,14 @@ main:
   - name: Open Source
     url: /open-source/
   - name: Writing
-    url: /blog/
+    url: /writing/
     children:
       - name: Blog
         url: /blog/
       - name: Opinions
         url: /opinions/
+      - name: Notes
+        url: /notes/
   - name: Books
     url: /books/
     children:
@@ -43,10 +56,14 @@ footer:
         url: /open-source/
   - title: Writing
     items:
+      - name: All Writing
+        url: /writing/
       - name: Blog
         url: /blog/
       - name: Opinions
         url: /opinions/
+      - name: Notes
+        url: /notes/
       - name: Categories
         url: /categories/
       - name: Tags
@@ -58,6 +75,6 @@ footer:
       - name: LinkedIn
         url: https://www.linkedin.com/in/prateeksharma28/
       - name: Résumé
-        url: /resume/
+        url: https://drive.google.com/file/d/1K3zOHEUgZ6lBQ2ntsQGcQvtzoNFtvk4x/view?usp=sharing
       - name: RSS
         url: /blog/index.xml

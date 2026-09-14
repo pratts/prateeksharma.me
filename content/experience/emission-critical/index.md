@@ -5,7 +5,7 @@ role: Lead Software Developer
 date: 2022-05-01
 start: "May 2022"
 end: "Mar 2025"
-location: Remote
+location: Gurugram, India
 draft: false
 description: "Led backend architecture for a multi-tenant B2B carbon-accounting SaaS — schema, APIs, and a Scope 1/2/3 emissions engine."
 categories: [Backend, Databases]
