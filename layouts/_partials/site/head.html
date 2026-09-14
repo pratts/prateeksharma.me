@@ -36,3 +36,12 @@
 
 {{ partial "site/assets/css.html" . }}
 {{ partial "site/assets/js.html" . }}
+
+{{- /* Cloudflare Web Analytics (RUM) — cookieless, no consent banner. Skipped
+       in local dev so `hugo server` sessions don't pollute real traffic
+       numbers. Disable entirely by clearing data/analytics.yaml. */ -}}
+{{- with hugo.Data.analytics.cloudflare_token }}
+  {{- if not hugo.IsDevelopment }}
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ . }}"}'></script>
+  {{- end }}
+{{- end }}

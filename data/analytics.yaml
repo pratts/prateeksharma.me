@@ -1,0 +1,8 @@
+# Cloudflare Web Analytics (RUM) — cookieless, no consent banner needed.
+# Leave cloudflare_token blank to disable analytics entirely.
+#
+# Get a token: Cloudflare dashboard -> Analytics & Logs -> Web Analytics ->
+# Add a site -> manual setup (the domain's DNS is unproxied, so Cloudflare
+# can't auto-inject the beacon at the edge). This token is a public site
+# identifier, not a secret — it's meant to be visible in page source.
+cloudflare_token: "9e40a7ce693a4739933db7c688d50d29"
