@@ -2,7 +2,7 @@
 title: tocli
 date: 2026-09-17
 draft: false
-featured: false
+featured: true
 description: "A terminal BitTorrent client with a process-per-torrent architecture, where every command works as a scriptable one-shot invocation or an interactive TUI."
 status: maintained
 categories: [Developer Tools, Systems]
