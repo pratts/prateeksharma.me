@@ -536,9 +536,13 @@
     background-color: rgb(30 41 59);
   }
 
+  /* !important: Tailwind Typography's default quote marks are emitted as
+     unlayered CSS, which beats any rule in a named @layer regardless of
+     specificity or source order. Without !important this override loses
+     and backticks reappear around inline code. */
   .nerdy-prose :where(:not(pre) > code):not(:where(.not-prose, .not-prose *))::before,
   .nerdy-prose :where(:not(pre) > code):not(:where(.not-prose, .not-prose *))::after {
-    content: "";
+    content: "" !important;
   }
 
   .nerdy-prose :where(pre):not(:where(.not-prose, .not-prose *)) {
