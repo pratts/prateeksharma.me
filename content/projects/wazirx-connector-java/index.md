@@ -14,7 +14,7 @@ related:
 ---
 
 After building the [Go connector](/projects/wazirx-connector-go/) for WazirX, I
-wanted the same thing on the JVM — but WazirX doesn't publish an official Java
+wanted the same thing on the JVM, but WazirX doesn't publish an official Java
 client at all, REST or WebSocket. The REST half was a fairly direct port of what
 I'd already learned building the Go client. The WebSocket half turned out to be
 its own project.
@@ -30,8 +30,8 @@ public class WazirxApiException extends RuntimeException { ... }
 public class WazirxClientException extends WazirxApiException { ... }
 ```
 
-`WazirxClientException` covers mistakes the caller can fix — a bad `side` value, a
-missing required field — caught before a request is even sent. `WazirxApiException`
+`WazirxClientException` covers mistakes the caller can fix, such as a bad `side`
+value or a missing required field, caught before a request is even sent. `WazirxApiException`
 covers everything that happens once a request leaves the process: network
 failures, non-2xx responses. Because one extends the other, a caller who only
 cares about "did something go wrong" can catch the parent; a caller who wants to
@@ -60,14 +60,14 @@ public void onClose(int code, String reason, boolean remote) {
 }
 ```
 
-Making it a daemon thread mattered — I didn't want a forgotten open socket to
+Making it a daemon thread mattered. I didn't want a forgotten open socket to
 keep the JVM alive after everything else had shut down.
 
 ## Not re-authenticating on every subscribe
 
 Private streams (account updates, order updates, your own trades) require an auth
 token, fetched via a REST call. My first pass fetched a fresh token on every
-single private subscription — which meant subscribing to three private streams in
+single private subscription, which meant subscribing to three private streams in
 a row meant three redundant round-trips for a token that hadn't actually expired.
 
 I fixed it by caching the token and checking its stated expiry before deciding

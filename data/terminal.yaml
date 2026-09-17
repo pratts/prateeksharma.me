@@ -24,13 +24,13 @@ config:
 whoami:
   lines:
     - "Prateek Sharma"
-    - "Software Engineer — Backend / Systems / Distributed Systems"
+    - "Software Engineer: Backend / Systems / Distributed Systems"
     - "10+ years. Fintech & crypto, B2B SaaS, real-time gaming."
 
 about:
   summary: >-
     I build backend systems and infrastructure where correctness, reliability, and
-    scale matter — APIs, data models, workflow orchestration, and observability.
+    scale matter: APIs, data models, workflow orchestration, and observability.
   details:
     - "Currently exploring Go and systems internals through hobby projects."
     - "Off-screen: books and calisthenics."
@@ -48,14 +48,14 @@ interests:
 
 # Contact block.
 contact:
-  intro: "Reach me here —"
+  intro: "Reach me here:"
   email: prateeksharma.2801@gmail.com
   links:
     - label: GitHub
       url: https://github.com/pratts
     - label: LinkedIn
       url: https://www.linkedin.com/in/prateeksharma28/
-    - label: Résumé
+    - label: Resume
       url: https://drive.google.com/file/d/1K3zOHEUgZ6lBQ2ntsQGcQvtzoNFtvk4x/view?usp=sharing
       text: "Google Drive (PDF)"
 

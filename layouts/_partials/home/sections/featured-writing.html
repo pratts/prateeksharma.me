@@ -16,14 +16,6 @@
     </div>
     <a class="mt-4 inline-flex items-center gap-1.5 font-mono text-sm nerdy-link" href="/writing/">All writing {{ partial "components/icon.html" (dict "name" "arrow-right" "class" "h-4 w-4") }}</a>
   {{ else }}
-    {{ partial "components/empty-state.html" (dict "parts" (slice
-      (dict "text" "No writing yet. Add page bundles under ")
-      (dict "type" "code" "text" "content/blog/")
-      (dict "text" ", ")
-      (dict "type" "code" "text" "content/opinions/")
-      (dict "text" ", or ")
-      (dict "type" "code" "text" "content/notes/")
-      (dict "text" ".")
-    )) }}
+    {{ partial "components/empty-state.html" (dict "message" "Nothing published yet.") }}
   {{ end }}
 </section>

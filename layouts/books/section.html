@@ -9,9 +9,10 @@
   }}
 
   <div class="mx-auto max-w-5xl" x-data="{ filter: 'all' }">
-    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "A working bookshelf — mostly systems, databases, and engineering. Ratings and notes where I have them.") "eyebrow" "~/books" "accent" "cyan") }}
+    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "A personal bookshelf: status, ratings, and notes as I read.") "eyebrow" "~/books" "accent" "cyan") }}
     {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-8 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
 
+    {{ if $books }}
     <div class="mb-8 flex flex-wrap items-center gap-2 font-mono text-xs">
       <span class="nerdy-muted-soft">view:</span>
       {{ range (slice (dict "k" "all" "l" "All") (dict "k" "reading" "l" "Reading") (dict "k" "read" "l" "Read") (dict "k" "want-to-read" "l" "Want to read")) }}
@@ -22,6 +23,7 @@
       <a class="ml-auto nerdy-link" href="{{ "/books/reading-list/" | relURL }}">Reading list →</a>
       <a class="nerdy-link" href="{{ "/books/reviews/" | relURL }}">Reviews →</a>
     </div>
+    {{ end }}
 
     {{ if $books }}
       {{ range $groups }}
@@ -39,11 +41,7 @@
         {{ end }}
       {{ end }}
     {{ else }}
-      {{ partial "components/empty-state.html" (dict "parts" (slice
-        (dict "text" "No books yet. Add page bundles under ")
-        (dict "type" "code" "text" "content/books/<slug>/index.md")
-        (dict "text" " with a cover image alongside.")
-      )) }}
+      {{ partial "components/empty-state.html" (dict "message" "Nothing on the shelf yet.") }}
     {{ end }}
   </div>
 {{ end }}

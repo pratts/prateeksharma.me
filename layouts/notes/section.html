@@ -1,7 +1,7 @@
 {{ define "main" }}
   {{ $pages := .Pages.ByDate.Reverse }}
   <div class="mx-auto max-w-3xl">
-    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Short technical fragments — the kind of thing that would otherwise live in a private notes file.") "eyebrow" "~/notes" "accent" "purple") }}
+    {{ partial "components/page-heading.html" (dict "title" .Title "description" (.Description | default "Short technical fragments: the kind of thing that would otherwise live in a private notes file.") "eyebrow" "~/notes" "accent" "purple") }}
     {{ with .Content }}<div class="nerdy-prose prose prose-slate mb-8 max-w-none dark:prose-invert">{{ . }}</div>{{ end }}
 
     {{ if $pages }}
@@ -9,11 +9,7 @@
         {{ range $pages }}{{ partial "cards/note-row.html" . }}{{ end }}
       </div>
     {{ else }}
-      {{ partial "components/empty-state.html" (dict "parts" (slice
-        (dict "text" "No notes yet. Add Markdown files under ")
-        (dict "type" "code" "text" "content/notes/")
-        (dict "text" ".")
-      )) }}
+      {{ partial "components/empty-state.html" (dict "message" "No notes yet.") }}
     {{ end }}
 
     <p class="mt-8 font-mono text-xs nerdy-muted-soft">

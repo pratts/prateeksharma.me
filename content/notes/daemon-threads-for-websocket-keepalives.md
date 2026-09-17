@@ -21,6 +21,6 @@ pingThread.start();
 A non-daemon thread keeps the JVM alive until it finishes. If a caller opens a
 socket, forgets to close it, and the rest of the application shuts down, a
 non-daemon ping thread will keep the process running indefinitely. A daemon
-thread just gets killed when everything else is done — which is the right
+thread just gets killed when everything else is done, which is the right
 default for background keepalive work that isn't itself the point of the
 program.

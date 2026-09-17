@@ -26,24 +26,24 @@ open-source models could get me, and built a script that:
 
 I wanted to lean on open-source tooling and minimize paid services:
 
-- [OpenAI Whisper](https://github.com/openai/whisper) — transcription. The
+- [OpenAI Whisper](https://github.com/openai/whisper): transcription. The
   `turbo` model worked better than `large` for my clips.
-- [FFmpeg](https://ffmpeg.org/) — all the audio/video muxing.
-- [demucs](https://github.com/facebookresearch/demucs) — vocal/background
+- [FFmpeg](https://ffmpeg.org/): all the audio/video muxing.
+- [demucs](https://github.com/facebookresearch/demucs): vocal/background
   separation.
-- [srt](https://pypi.org/project/srt/) — reading/writing subtitle files.
-- ChatGPT / Google Translate API — translation, with an option to pick between
+- [srt](https://pypi.org/project/srt/): reading/writing subtitle files.
+- ChatGPT / Google Translate API: translation, with an option to pick between
   them (Google is more literal; ChatGPT adds a human touch).
 
 ## What was actually hard
 
 1. **Transcription with loud background music.** Separating vocals with demucs
-   didn't help much in my cases — Whisper was trained on messy audio and did
+   didn't help much in my cases. Whisper was trained on messy audio and did
    better on the raw track.
 2. **Translation quality vs. tone.** Google Translate was the most accurate;
    ChatGPT read more naturally. The script lets you choose.
 3. **Open-source TTS quality.** Bark produced distorted output on some lines. I
-   moved to voice cloning with OpenVoice + MeloTTS — which became its own project,
+   moved to voice cloning with OpenVoice + MeloTTS, which became its own project,
    [Audio Cloning](/projects/audio-cloning/).
 4. **Audio length drift.** Translated speech is often longer than the original,
    which breaks the mux. Some lines need trimming.

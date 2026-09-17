@@ -7,7 +7,7 @@ start: "May 2022"
 end: "Mar 2025"
 location: Gurugram, India
 draft: false
-description: "Led backend architecture for a multi-tenant B2B carbon-accounting SaaS — schema, APIs, and a Scope 1/2/3 emissions engine."
+description: "Led backend architecture for a multi-tenant B2B carbon-accounting SaaS: schema, APIs, and a Scope 1/2/3 emissions engine."
 categories: [Backend, Databases]
 tags: [NestJS, TypeScript, PostgreSQL, Multi-tenancy, Auth0, Meilisearch, OpenTelemetry, AWS, Kubernetes]
 ---
