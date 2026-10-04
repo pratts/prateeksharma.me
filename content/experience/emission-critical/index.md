@@ -9,7 +9,7 @@ location: Gurugram, India
 draft: false
 description: "Led backend architecture for a multi-tenant B2B carbon-accounting SaaS: schema, APIs, and a Scope 1/2/3 emissions engine."
 categories: [Backend, Databases]
-tags: [NestJS, TypeScript, PostgreSQL, Multi-tenancy, Auth0, Meilisearch, OpenTelemetry, AWS, Kubernetes]
+tags: [NestJS, TypeScript, PostgreSQL, MongoDB, NATS, Multi-tenancy, Auth0, OpenFGA, Meilisearch, OpenTelemetry, AWS, Kubernetes]
 ---
 
 Emission Critical is a B2B SaaS platform for enterprise carbon footprint and
@@ -22,7 +22,9 @@ computation engine.
 
 - Architected a **multi-tenant PostgreSQL schema** with tenant-level data
   isolation.
-- Integrated **Auth0** for identity and multi-tenant RBAC.
+- Integrated **Auth0** for identity and multi-tenant RBAC, and extended the
+  platform's **OpenFGA**-based authorization model with new roles and
+  permissions for fine-grained cross-tenant access.
 - Streamlined data ingestion through Excel parsing and automated **AWS S3**
   pipelines.
 
@@ -47,5 +49,5 @@ computation engine.
 
 ## Stack
 
-NestJS · TypeScript · PostgreSQL · Auth0 · Meilisearch · AWS · Kubernetes ·
-OpenTelemetry
+NestJS · TypeScript · PostgreSQL · MongoDB · NATS · Auth0 · OpenFGA ·
+Meilisearch · AWS · Kubernetes · OpenTelemetry

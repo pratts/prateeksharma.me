@@ -20,7 +20,8 @@ and tournament features on top of the existing platform.
 ### Tournament features
 
 - Built advanced tournament mechanics: **hand-for-hand** play, **re-entry**, and
-  **table balancing**.
+  **table balancing**, tested with 1,500 to 2,000 concurrent players in
+  large-field events.
 
 ### Real-time backend
 
