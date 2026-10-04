@@ -3,7 +3,7 @@ title: Tidylnk
 date: 2026-08-23
 draft: false
 featured: false
-lastmod: 2026-09-28
+lastmod: 2026-09-28T06:54:01Z
 description: "A self-hosted URL shortener with a React admin panel, built with Go, Redis, and PostgreSQL."
 status: live
 categories: [Developer Tools, Backend]

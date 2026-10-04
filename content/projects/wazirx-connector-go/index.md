@@ -3,7 +3,7 @@ title: WazirX Go Connector
 date: 2026-08-23
 draft: false
 featured: true
-lastmod: 2026-08-30
+lastmod: 2026-08-30T10:28:35Z
 description: "An open-source unofficial REST API client for the WazirX crypto exchange in Go, acknowledged by WazirX's co-founder."
 status: maintained
 categories: [Backend, Programming]

@@ -36,7 +36,7 @@
         </a>
       {{ end }}
       {{ if not $p.Lastmod.IsZero }}
-        <span class="ml-auto font-mono text-[11px] nerdy-muted-soft">Updated <time datetime="{{ $p.Lastmod.Format "2006-01-02" }}">{{ $p.Lastmod.Format "Jan 2, 2006" }}</time></span>
+        <span class="ml-auto font-mono text-[11px] nerdy-muted-soft">Updated <time datetime="{{ $p.Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ $p.Lastmod.Format "Jan 2, 2006, 15:04 MST" }}</time></span>
       {{ end }}
     </div>
   {{ end }}
