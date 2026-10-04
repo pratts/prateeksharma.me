@@ -3,6 +3,7 @@ title: WazirX Java Connector
 date: 2026-08-23
 draft: false
 featured: false
+lastmod: 2026-08-30
 description: "An open-source unofficial REST/WebSocket client for the WazirX crypto exchange in Java, acknowledged by WazirX's co-founder."
 status: maintained
 categories: [Backend, Programming]

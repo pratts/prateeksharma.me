@@ -3,6 +3,7 @@ title: TTS Study Assistant
 date: 2024-01-15
 draft: false
 featured: true
+lastmod: 2026-10-04
 description: "A Chrome extension for saving, organizing, and listening to notes from any webpage, backed by a Go/Fiber API and a React admin panel."
 status: live
 categories: [Developer Tools, Programming]

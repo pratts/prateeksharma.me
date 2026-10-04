@@ -3,6 +3,7 @@ title = '{{ replace .File.ContentBaseName "-" " " | title }}'
 date = {{ .Date }}
 draft = true
 featured = false
+lastmod = {{ .Date }}   # last commit to the repo's main branch; update when it changes
 description = ''
 status = 'maintained'   # maintained | live | experiment | archived
 categories = ['Developer Tools']
