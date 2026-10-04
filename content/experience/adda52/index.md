@@ -7,7 +7,7 @@ start: "Sep 2014"
 end: "Feb 2020"
 location: Gurugram, India
 draft: false
-description: "Five-plus years on a real-money real-time poker platform: game logic, load testing at 10k+ concurrent users, disaster recovery, and a PHP → Node.js migration."
+description: "Five-plus years on a real-money real-time poker platform: game logic, load testing at 21,000 simulated concurrent players, disaster recovery, and a PHP → Node.js migration."
 categories: [Systems, Backend]
 tags: [Java, Node.js, "Angular 2", Real-time Systems, Load Testing, Disaster Recovery, Jenkins, Gradle]
 ---
@@ -33,7 +33,8 @@ across the game backend, load and resilience testing, and the public platform.
 ### Load and resilience testing
 
 - Enhanced Java-based user-behaviour simulators to **load test real-time poker
-  servers at 10,000+ concurrent users**.
+  servers at 21,000 simulated concurrent players**, validating stable
+  operation for ~3,000 live players and informing planned scalability work.
 - Built **disaster-recovery systems** for zero-downtime gameplay, restoring
   poker games and player state after a failure.
 

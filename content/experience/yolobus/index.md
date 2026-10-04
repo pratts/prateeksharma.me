@@ -24,11 +24,13 @@ and bookings.
 
 ### Booking engine
 
-- Migrated core services to **Python / Django**.
-- Built a **serverless ticket-booking engine** on **AWS Chalice**, improving
-  maintainability and transaction scalability.
-- Implemented high-throughput booking APIs integrating third-party payment and
-  inventory providers (e.g. Redbus, Paytm).
+- Migrated core booking services to **Python / Django**, handling 50K+ bookings
+  per day while improving maintainability and development speed.
+- Built a **serverless ticket-booking engine** on **AWS Chalice**, with
+  high-throughput REST APIs integrating **Razorpay** and **Redbus**.
+- Optimised Redbus-integrated APIs with application- and platform-level
+  caching, funnel filtering, versioning, and booking-status checks to reduce
+  latency.
 
 ## Stack
 

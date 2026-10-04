@@ -23,7 +23,8 @@ keeping wallet balances consistent across chains.
 - Integrated **Cardano** and **Stellar**, reading on-chain data from Snowflake
   for balance reconciliation, transaction parsing, and portfolio tracking.
 - Onboarded **Akash** and **Axelar** (cross-chain), plus **Bitcoin Ordinals,
-  Inscriptions, BRC-20, and Runes** via the Ordiscan API.
+  Inscriptions, BRC-20, and Runes** via the Ordiscan API, processing 50K+
+  wallet transactions through unified parsing.
 - Worked behind a unified blockchain abstraction so each new chain was a smaller,
   more predictable piece of work than the last.
 
