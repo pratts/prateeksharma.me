@@ -3,7 +3,7 @@ title: git-why
 date: 2026-09-16
 draft: false
 featured: false
-lastmod: 2026-09-19
+lastmod: 2026-09-19T07:32:54Z
 description: "A Claude Code skill that captures the design reasoning behind non-trivial commits as git notes, so the 'why' stays retrievable from the terminal long after the chat that produced it is gone."
 status: experiment
 categories: [Developer Tools]

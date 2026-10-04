@@ -3,7 +3,7 @@ title: Video Translator
 date: 2025-06-23
 draft: false
 featured: false
-lastmod: 2025-06-26
+lastmod: 2025-06-26T11:30:20Z
 description: "A local AI dubbing pipeline that transcribes a video's audio, translates it, and re-synthesizes speech in the target language using open-source models."
 status: experiment
 categories: [Programming, Developer Tools]
