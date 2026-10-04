@@ -3,6 +3,7 @@ title: Goroomlib
 date: 2026-08-23
 draft: false
 featured: true
+lastmod: 2025-07-30
 description: "A thread-safe Go library providing a reusable Room-User architecture for real-time systems like chat and multiplayer games."
 status: maintained
 categories: [Systems, Programming]

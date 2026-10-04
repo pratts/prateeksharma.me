@@ -3,6 +3,7 @@ title: Audio Cloning
 date: 2025-06-23
 draft: false
 featured: false
+lastmod: 2025-06-25
 description: "A patched fork of OpenVoice that clones a speaker's voice for short subtitle lines and runs on CPU: the TTS stage of the Video Translator pipeline."
 status: experiment
 categories: [Programming]

@@ -3,6 +3,7 @@ title: tocli
 date: 2026-09-17
 draft: false
 featured: true
+lastmod: 2026-09-16
 description: "A terminal BitTorrent client with a process-per-torrent architecture, where every command works as a scriptable one-shot invocation or an interactive TUI."
 status: maintained
 categories: [Developer Tools, Systems]
@@ -43,6 +44,25 @@ alive, released automatically the instant its file descriptors close, for
 any reason. That's a direct kernel guarantee rather than an inference, so a
 second process can never start downloading into the same directory while
 another one already is, even in the narrow window right after a crash.
+
+## One listen port for every torrent, silently
+
+Every `internal/engine.Run` process pinned its BitTorrent listen port to the
+same configured value, so only the first concurrently-running torrent could
+actually bind it. Every torrent after it silently fell back to outbound-only
+connections (no inbound peers), with no symptom anywhere in `list` or the
+logs, and it defeated any port-forwarding a user had set up on their router
+for that range.
+
+The fix is `internal/portpool`: each torrent claims the lowest available
+port in the configured range before its `torrent.Client` is created, so a
+forwarded range fills predictably from the bottom up rather than landing on
+an arbitrary free port. Range exhaustion doesn't fail the torrent; it falls
+back to an OS-assigned ephemeral port, and that fallback is now surfaced
+where a user would actually see it, `list`/`list --json` and the dashboard's
+status column, rather than only in `log.txt`. A claimed port releases
+through the same paths that already release the per-torrent lock: normal
+completion, the pause handler, and deferred cleanup on an early failure.
 
 ## One engine, two front ends
 
