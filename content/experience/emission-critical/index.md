@@ -32,8 +32,8 @@ computation engine.
 
 - Designed the engine for full **Scope 1, 2, and 3** emissions tracking and
   product carbon footprints.
-- Cut computation latency ~50% and improved throughput a further ~30% with
-  better indexing and batch processing.
+- Cut carbon emission computation latency ~50% and product carbon footprint
+  computation ~30% with better indexing and batch processing.
 
 ### Search and lookups
 
