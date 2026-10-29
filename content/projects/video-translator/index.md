@@ -2,7 +2,7 @@
 title: Video Translator
 date: 2025-06-23
 draft: false
-featured: false
+featured: true
 lastmod: 2026-10-27T17:19:21Z
 description: "A local pipeline that dubs a video into another language in each speaker's own cloned voice: transcribe, translate, clone, fit the result to the original timing, and remux, all from one command."
 status: experiment
