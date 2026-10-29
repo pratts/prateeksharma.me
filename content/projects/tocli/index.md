@@ -3,7 +3,7 @@ title: tocli
 date: 2026-09-17
 draft: false
 featured: true
-lastmod: 2026-09-16T19:27:35Z
+lastmod: 2026-10-14T12:13:50Z
 description: "A terminal BitTorrent client with a process-per-torrent architecture, where every command works as a scriptable one-shot invocation or an interactive TUI."
 status: maintained
 categories: [Developer Tools, Systems]
@@ -63,6 +63,16 @@ where a user would actually see it, `list`/`list --json` and the dashboard's
 status column, rather than only in `log.txt`. A claimed port releases
 through the same paths that already release the per-torrent lock: normal
 completion, the pause handler, and deferred cleanup on an early failure.
+
+A follow-up bug slipped through that first fix. When a torrent fell back to
+an "OS-assigned" port (the range was exhausted, or no range was configured
+at all), it was actually still landing on the underlying torrent library's
+hardcoded default port, not a real OS-assigned one — the exact collision the
+pool was built to prevent, now showing up as a background process that
+crashed with the real error buried only in `log.txt`. The fix resets the
+listen port to `0` by default and only overrides it with a claimed pool
+port, so "OS-assigned" is the actual default rather than something every
+code path has to remember to set.
 
 ## One engine, two front ends
 

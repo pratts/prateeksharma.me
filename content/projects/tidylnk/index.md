@@ -36,6 +36,16 @@ admin panel to manage and track links.
 
 ## Decisions worth noting
 
+### A real homepage instead of a bare 404
+
+[tidylnk.com](https://tidylnk.com) itself used to return a plain JSON 404,
+which looks broken to a visitor and suspicious to anything scanning link
+reputation. It now serves a small static homepage with no JavaScript at
+all, linking out to the admin panel, both repos, and a way to report an
+abusive link, plus a `robots.txt` that lets crawlers index that homepage
+without following (and inflating the click count on) the short links
+themselves.
+
 ### Clicks never block a redirect
 
 Click recording writes happen in batches off the request path rather than

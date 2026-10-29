@@ -103,6 +103,25 @@ This made it easy to point the client at a different base URL for testing, or
 swap in a custom `http.Client`, without touching the constructor signature every
 time I wanted one more knob.
 
+## Auditing the client against the real API automatically
+
+WazirX documents its API through a public Postman collection, which is the
+closest thing to a source of truth for exactly how each endpoint expects its
+parameters. Rather than re-reading it by hand every so often, I wrote a
+Claude Code skill, `wazirx-api-sync`, that clones the collection fresh and
+walks through it against this client's code, checking that every parameter's
+name, type, and placement actually match.
+
+The first run found real bugs, not just missing nice-to-haves:
+`cancel_order` and `cancel_open_orders` were sending their parameters in the
+query string, but WazirX's API expects them in the request body for those
+calls — a mismatch that would fail against the live API, not a style
+preference. A few optional filters were also just missing, and one field,
+`WithdrawHistory`'s `status`, was typed as a number when the API actually
+returns and expects a string like `"FAILED"`. All of it got fixed in one
+pass, and the skill now lives in the repo for the next time the API changes
+underneath it.
+
 ## Where it's landed
 
 The library has been acknowledged by WazirX's co-founder, and I've gone back to

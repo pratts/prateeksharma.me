@@ -10,11 +10,13 @@ description: "Relaxed the minimum-segment-length check in se_extractor.py so sub
 categories: [Programming]
 tags: [Python, OpenVoice, TTS, Voice Cloning]
 related:
-  - /projects/audio-cloning/
+  - /projects/video-translator/
 ---
 
-While building the [Audio Cloning](/projects/audio-cloning/) stage of my
-video-translator pipeline, I hit two blockers in [OpenVoice](https://github.com/myshell-ai/OpenVoice):
+**Previous approach, no longer used:** an earlier version of my
+[video-translator](/projects/video-translator/) pipeline cloned voices with
+OpenVoice and MeloTTS; that stage has since been replaced with F5-TTS. While
+it was still in use, I hit two blockers in [OpenVoice](https://github.com/myshell-ai/OpenVoice):
 
 - `openvoice/se_extractor.py` discarded audio segments shorter than 1.5 seconds,
   which meant short subtitle lines (`hello`, `hi`, `bye`) couldn't be cloned at
