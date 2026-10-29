@@ -91,6 +91,24 @@ It's a small thing, but it turned "every private subscribe hits the REST API"
 into "the REST API gets hit only when the cached token is actually about to
 expire."
 
+## Auditing the client against the real API automatically
+
+I built the same checking tool for this connector as for the [Go one](/projects/wazirx-connector-go/):
+a Claude Code skill, `wazirx-api-sync`, that clones WazirX's public Postman
+collection and walks it against the client, checking that every parameter's
+name, type, and placement in the request actually match what the API
+expects, rather than trusting it stayed correct as the API evolved.
+
+Running it here caught the same class of bug as on the Go side:
+`cancel_order`, `cancel_open_orders`, and `withdraw` were sending their
+parameters in the wrong part of the request — query string instead of body,
+or vice versa — which would simply fail against the real API. It also caught
+a type mismatch (`withdrawHistory`'s `status` was an `Integer` when the API
+expects a string like `"FAILED"`) and a handful of missing optional
+parameters. All fixed in one pass, cross-checked endpoint by endpoint against
+the collection rather than against my own assumptions about what the API
+does.
+
 ## Where it's landed
 
 Like the Go connector, this library has been acknowledged by WazirX's co-founder,

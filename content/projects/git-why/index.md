@@ -3,7 +3,7 @@ title: git-why
 date: 2026-09-16
 draft: false
 featured: false
-lastmod: 2026-09-19T07:32:54Z
+lastmod: 2026-10-25T16:43:32Z
 description: "A Claude Code skill that captures the design reasoning behind non-trivial commits as git notes, so the 'why' stays retrievable from the terminal long after the chat that produced it is gone."
 status: experiment
 categories: [Developer Tools]
@@ -37,6 +37,21 @@ Three scripts back the workflow:
   keyword, for when you remember the concept but not the file.
 - `git-why-record.sh`: a coverage check, walking history from newest to
   oldest to report which recent commits still have no note.
+
+## Installing it without leaving a trace in your repo
+
+You clone git-why once, anywhere outside your other projects, and then
+install it one of two ways: per user, so it's available in every repo you
+open in Claude Code, or per repo, scoped to just one project. Either way,
+nothing from the clone ever gets copied or committed into the target repo —
+the skill is installed as a **symlink** back to the clone, not a copy, so
+there's no nested `.git` to worry about and nothing to keep in sync by hand.
+For the per-repo install, the commit-reminder hook goes into Claude Code's
+local, uncommitted settings file rather than the shared one, and both paths
+are added to the repo's own git-ignore-like exclude list, so `git status` and
+`git add .` never see them. Updating is just a `git pull` in the clone, since
+every install points back to it; uninstalling removes the symlink, the hook,
+and the exclude entries, and leaves everything else untouched.
 
 ## The part that will bite someone
 
