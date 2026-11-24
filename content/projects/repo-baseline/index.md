@@ -3,7 +3,7 @@ title: Repo Baseline
 date: 2026-10-25
 draft: false
 featured: false
-lastmod: 2026-10-25T16:28:23Z
+lastmod: 2026-11-24T18:00:00Z
 description: "A script that applies the same branch-protection and repo settings across my GitHub repositories in one command."
 status: maintained
 categories: [Developer Tools]
@@ -22,12 +22,23 @@ is a single script that applies it consistently instead.
 
 Running `scripts/apply-baseline.sh <owner/repo> [check name]...` applies a
 ruleset on the default branch: changes only land through a pull request with
-at least one approving review, every commit must be signed, force pushes are
-blocked, and any status checks you pass in must pass before a merge is
-allowed. It also turns on `delete_branch_on_merge`, so a PR's branch is
+at least one approving review, every commit must be signed, and force pushes
+are blocked. Any status checks you pass in must pass before a merge is
+allowed, and nobody can bypass them. It also turns on `delete_branch_on_merge`, so a PR's branch is
 cleaned up automatically once it merges. Re-running the script is safe — if a
 repo already has the ruleset, it's backed up locally and updated in place
 rather than duplicated.
+
+## Required checks get their own ruleset
+
+The first version put everything in one ruleset, including a bypass so I could
+merge my own PRs: GitHub won't let you approve your own pull request. That
+turned out to be a hole. A bypass applies to every rule in its ruleset, so it
+also let me merge while a required check was running or failing. Required
+checks now live in a second ruleset with no bypass at all, so the approval can
+be skipped for my own PRs but the checks can't. Re-running with no check names
+on a repo that already has that ruleset leaves it alone with a warning,
+rather than silently dropping the checks.
 
 ## Dropping the skill layer it started with
 
